@@ -9,7 +9,7 @@
 class AArenaPlayerStart;
 
 /**
- * 
+ *
  */
 UCLASS()
 class SMASHUE_API AMatchGameMode : public AGameModeBase
@@ -21,5 +21,5 @@ public:
 
 private:
 	void FindPlayerStartActorsInArena(TArray<AArenaPlayerStart*>& ResultsActors);
-	
+
 };
