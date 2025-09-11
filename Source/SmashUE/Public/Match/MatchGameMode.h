@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "Characters/SmashCharacter.h"
 #include "MatchGameMode.generated.h"
 
 class ASmashCharacter;
@@ -24,18 +23,6 @@ public:
 protected:
 	UPROPERTY()
 	TArray<ASmashCharacter*> CharactersInsideArena;
-	
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<ASmashCharacter> SmashCharacterClassP0;
-
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<ASmashCharacter> SmashCharacterClassP1;
-
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<ASmashCharacter> SmashCharacterClassP2;
-
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<ASmashCharacter> SmashCharacterClassP3;
 
 private:
 	void FindPlayerStartActorsInArena(TArray<AArenaPlayerStart*>& ResultsActors);
