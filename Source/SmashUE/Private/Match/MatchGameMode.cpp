@@ -21,12 +21,12 @@ void AMatchGameMode::BeginPlay()
         TSubclassOf<ASmashCharacter> SmashCharacterClass = GetSmashCharacterClassFromInputType(InputType);
         if (SmashCharacterClass == nullptr) continue;
 
-        GEngine->AddOnScreenDebugMessage(
-            -1,
-            3.f,
-            FColor::Cyan,
-            SmashCharacterClass->GetFName().ToString()
-        );
+        //GEngine->AddOnScreenDebugMessage(
+        //    -1,
+        //    3.f,
+        //    FColor::Cyan,
+        //    SmashCharacterClass->GetFName().ToString()
+        //);
     }
 }
 
