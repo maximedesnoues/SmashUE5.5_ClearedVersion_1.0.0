@@ -3,6 +3,7 @@
 
 #include "Characters/States/SmashCharacterStateWalk.h"
 #include "Characters/SmashCharacter.h"
+#include "Characters/SmashCharacterStateMachine.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Animation/AnimInstance.h"
 
@@ -15,31 +16,24 @@ void USmashCharacterStateWalk::StateEnter(ESmashCharacterStateID PreviousStateID
 {
 	Super::StateEnter(PreviousStateID);
 
-	if (Character && Character->GetCharacterMovement())
-	{
-		Character->GetCharacterMovement()->MaxWalkSpeed = MoveSpeedMax;
-	}
-
-	PlayMontage(WalkAnim, 1.f);
-
 	GEngine->AddOnScreenDebugMessage(
 		-1,
 		3.f,
 		FColor::Cyan,
 		TEXT("Enter StateWalk")
 	);
+
+	if (Character && Character->GetCharacterMovement())
+	{
+		Character->GetCharacterMovement()->MaxWalkSpeed = MoveSpeedMax;
+	}
+
+	PlayMontage(WalkAnim, 1.f);
 }
 
 void USmashCharacterStateWalk::StateExit(ESmashCharacterStateID NextStateID)
 {
 	Super::StateExit(NextStateID);
-
-	if (Character && Character->GetCharacterMovement())
-	{
-		Character->GetCharacterMovement()->StopMovementImmediately();
-	}
-
-	StopMontage(WalkAnim, 0.2f);
 
 	GEngine->AddOnScreenDebugMessage(
 		-1,
@@ -47,19 +41,18 @@ void USmashCharacterStateWalk::StateExit(ESmashCharacterStateID NextStateID)
 		FColor::Red,
 		TEXT("Exit StateWalk")
 	);
+
+	if (Character && Character->GetCharacterMovement())
+	{
+		Character->GetCharacterMovement()->StopMovementImmediately();
+	}
+
+	StopMontage(WalkAnim, 0.2f);
 }
 
 void USmashCharacterStateWalk::StateTick(float DeltaTime)
 {
 	Super::StateTick(DeltaTime);
-
-	if (Character == nullptr) return;
-
-	const float Dir = Character->GetOrientX();
-	if (FMath::Abs(Dir) > KINDA_SMALL_NUMBER)
-	{
-		Character->AddMovementInput(FVector::ForwardVector, Dir);
-	}
 
 	GEngine->AddOnScreenDebugMessage(
 		-1,
@@ -67,6 +60,16 @@ void USmashCharacterStateWalk::StateTick(float DeltaTime)
 		FColor::Green,
 		TEXT("Tick StateWalk")
 	);
+
+	if (FMath::Abs(Character->GetInputMoveX()) < 0.1f)
+	{
+		StateMachine->ChangeState(ESmashCharacterStateID::Idle);
+	}
+	else
+	{
+		Character->SetOrientX(Character->GetInputMoveX());
+		Character->AddMovementInput(FVector::ForwardVector, Character->GetOrientX());
+	}
 }
 
 void USmashCharacterStateWalk::PlayMontage(UAnimMontage* Montage, float PlayRate) const

@@ -9,6 +9,8 @@
 #include "SmashCharacter.generated.h"
 
 class USmashCharacterStateMachine;
+class UEnhancedInputComponent;
+struct FInputActionValue;
 
 UCLASS()
 class SMASHUE_API ASmashCharacter : public ACharacter
@@ -75,6 +77,22 @@ public:
 
 protected:
 	void SetupMappingContextIntoController() const;
+
+#pragma endregion
+
+#pragma region Input Move X
+
+public:
+	float GetInputMoveX() const;
+
+protected:
+	UPROPERTY()
+	float InputMoveX = 0.f;
+
+private:
+	void BindInputMoveXAxisAndActions(UEnhancedInputComponent* EnhancedInputComponent);
+
+	void OnInputMoveX(const FInputActionValue& InputActionValue);
 
 #pragma endregion
 

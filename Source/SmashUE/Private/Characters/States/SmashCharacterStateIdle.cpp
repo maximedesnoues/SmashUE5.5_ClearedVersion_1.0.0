@@ -3,6 +3,7 @@
 
 #include "Characters/States/SmashCharacterStateIdle.h"
 #include "Characters/SmashCharacter.h"
+#include "Characters/SmashCharacterStateMachine.h"
 #include "Animation/AnimInstance.h"
 
 ESmashCharacterStateID USmashCharacterStateIdle::GetStateID() const
@@ -14,21 +15,19 @@ void USmashCharacterStateIdle::StateEnter(ESmashCharacterStateID PreviousStateID
 {
 	Super::StateEnter(PreviousStateID);
 
-	PlayMontage(IdleAnim, 1.f);
-
 	GEngine->AddOnScreenDebugMessage(
 		-1,
 		3.f,
 		FColor::Cyan,
 		TEXT("Enter StateIdle")
 	);
+
+	PlayMontage(IdleAnim, 1.f);
 }
 
 void USmashCharacterStateIdle::StateExit(ESmashCharacterStateID NextStateID)
 {
 	Super::StateExit(NextStateID);
-
-	StopMontage(IdleAnim, 0.2f);
 
 	GEngine->AddOnScreenDebugMessage(
 		-1,
@@ -36,6 +35,8 @@ void USmashCharacterStateIdle::StateExit(ESmashCharacterStateID NextStateID)
 		FColor::Red,
 		TEXT("Exit StateIdle")
 	);
+
+	StopMontage(IdleAnim, 0.2f);
 }
 
 void USmashCharacterStateIdle::StateTick(float DeltaTime)
@@ -48,6 +49,11 @@ void USmashCharacterStateIdle::StateTick(float DeltaTime)
 		FColor::Green,
 		TEXT("Tick StateIdle")
 	);
+
+	if (FMath::Abs(Character->GetInputMoveX()) > 0.1f)
+	{
+		StateMachine->ChangeState(ESmashCharacterStateID::Walk);
+	}
 }
 
 void USmashCharacterStateIdle::PlayMontage(UAnimMontage* Montage, float PlayRate) const

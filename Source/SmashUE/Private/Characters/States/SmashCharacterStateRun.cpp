@@ -15,31 +15,24 @@ void USmashCharacterStateRun::StateEnter(ESmashCharacterStateID PreviousStateID)
 {
 	Super::StateEnter(PreviousStateID);
 
-	if (Character && Character->GetCharacterMovement())
-	{
-		Character->GetCharacterMovement()->MaxWalkSpeed = RunMoveSpeedMax;
-	}
-
-	PlayMontage(RunAnim, 1.f);
-
 	GEngine->AddOnScreenDebugMessage(
 		-1,
 		3.f,
 		FColor::Cyan,
 		TEXT("Enter StateRun")
 	);
+
+	if (Character && Character->GetCharacterMovement())
+	{
+		Character->GetCharacterMovement()->MaxWalkSpeed = RunMoveSpeedMax;
+	}
+
+	PlayMontage(RunAnim, 1.f);
 }
 
 void USmashCharacterStateRun::StateExit(ESmashCharacterStateID NextStateID)
 {
 	Super::StateExit(NextStateID);
-
-	if (Character && Character->GetCharacterMovement())
-	{
-		Character->GetCharacterMovement()->StopMovementImmediately();
-	}
-
-	StopMontage(RunAnim, 0.2f);
 
 	GEngine->AddOnScreenDebugMessage(
 		-1,
@@ -47,19 +40,18 @@ void USmashCharacterStateRun::StateExit(ESmashCharacterStateID NextStateID)
 		FColor::Red,
 		TEXT("Exit StateRun")
 	);
+
+	if (Character && Character->GetCharacterMovement())
+	{
+		Character->GetCharacterMovement()->StopMovementImmediately();
+	}
+
+	StopMontage(RunAnim, 0.2f);
 }
 
 void USmashCharacterStateRun::StateTick(float DeltaTime)
 {
 	Super::StateTick(DeltaTime);
-
-	if (Character == nullptr) return;
-
-	const float Dir = Character->GetOrientX();
-	if (FMath::Abs(Dir) > KINDA_SMALL_NUMBER)
-	{
-		Character->AddMovementInput(FVector::ForwardVector, Dir);
-	}
 
 	GEngine->AddOnScreenDebugMessage(
 		-1,
@@ -67,6 +59,12 @@ void USmashCharacterStateRun::StateTick(float DeltaTime)
 		FColor::Green,
 		TEXT("Tick StateRun")
 	);
+
+	const float Dir = Character->GetOrientX();
+	if (FMath::Abs(Character->GetOrientX()) > KINDA_SMALL_NUMBER)
+	{
+		Character->AddMovementInput(FVector::ForwardVector, Dir);
+	}
 }
 
 void USmashCharacterStateRun::PlayMontage(UAnimMontage* Montage, float PlayRate) const
