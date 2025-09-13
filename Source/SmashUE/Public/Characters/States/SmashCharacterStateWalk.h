@@ -27,10 +27,10 @@ public:
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Smash Character State Walk", meta=(DisplayName="Walk Anim"))
-	TObjectPtr<UAnimMontage> WalkAnim = nullptr;
+	TObjectPtr<UAnimMontage> WalkAnim;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Smash Character State Walk", meta=(DisplayName="Move Speed Max", ClampMin="0", UIMin="0"))
-	float MoveSpeedMax = 250.f;
+	float MoveSpeedMax;
 
 	void PlayMontage(UAnimMontage* Montage, float PlayRate = 1.f) const;
 	void StopMontage(UAnimMontage* Montage, float BlendOut = 0.2f) const;

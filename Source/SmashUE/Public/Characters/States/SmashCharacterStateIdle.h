@@ -27,7 +27,7 @@ public:
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Smash Character State Idle")
-	TObjectPtr<UAnimMontage> IdleAnim = nullptr;
+	TObjectPtr<UAnimMontage> IdleAnim;
 
 	void PlayMontage(UAnimMontage* Montage, float PlayRate = 1.f) const;
 	void StopMontage(UAnimMontage* Montage, float BlendOut = 0.2f) const;
