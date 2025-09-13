@@ -1,36 +1,36 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Characters/States/SmashCharacterStateWalk.h"
+#include "Characters/States/SmashCharacterStateRun.h"
 #include "Characters/SmashCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Animation/AnimInstance.h"
 
-ESmashCharacterStateID USmashCharacterStateWalk::GetStateID() const
+ESmashCharacterStateID USmashCharacterStateRun::GetStateID() const
 {
-	return ESmashCharacterStateID::Walk;
+	return ESmashCharacterStateID::Run;
 }
 
-void USmashCharacterStateWalk::StateEnter(ESmashCharacterStateID PreviousStateID)
+void USmashCharacterStateRun::StateEnter(ESmashCharacterStateID PreviousStateID)
 {
 	Super::StateEnter(PreviousStateID);
 
 	if (Character && Character->GetCharacterMovement())
 	{
-		Character->GetCharacterMovement()->MaxWalkSpeed = MoveSpeedMax;
+		Character->GetCharacterMovement()->MaxWalkSpeed = RunMoveSpeedMax;
 	}
 
-	PlayMontage(WalkAnim, 1.f);
+	PlayMontage(RunAnim, 1.f);
 
 	GEngine->AddOnScreenDebugMessage(
 		-1,
 		3.f,
 		FColor::Cyan,
-		TEXT("Enter StateWalk")
+		TEXT("Enter StateRun")
 	);
 }
 
-void USmashCharacterStateWalk::StateExit(ESmashCharacterStateID NextStateID)
+void USmashCharacterStateRun::StateExit(ESmashCharacterStateID NextStateID)
 {
 	Super::StateExit(NextStateID);
 
@@ -39,17 +39,17 @@ void USmashCharacterStateWalk::StateExit(ESmashCharacterStateID NextStateID)
 		Character->GetCharacterMovement()->StopMovementImmediately();
 	}
 
-	StopMontage(WalkAnim, 0.2f);
+	StopMontage(RunAnim, 0.2f);
 
 	GEngine->AddOnScreenDebugMessage(
 		-1,
 		3.f,
 		FColor::Red,
-		TEXT("Exit StateWalk")
+		TEXT("Exit StateRun")
 	);
 }
 
-void USmashCharacterStateWalk::StateTick(float DeltaTime)
+void USmashCharacterStateRun::StateTick(float DeltaTime)
 {
 	Super::StateTick(DeltaTime);
 
@@ -65,11 +65,11 @@ void USmashCharacterStateWalk::StateTick(float DeltaTime)
 		-1,
 		0.1f,
 		FColor::Green,
-		TEXT("Tick StateWalk")
+		TEXT("Tick StateRun")
 	);
 }
 
-void USmashCharacterStateWalk::PlayMontage(UAnimMontage* Montage, float PlayRate) const
+void USmashCharacterStateRun::PlayMontage(UAnimMontage* Montage, float PlayRate) const
 {
 	if (Character == nullptr || Montage == nullptr) return;
 	if (UAnimInstance* Anim = Character->GetMesh()->GetAnimInstance())
@@ -78,7 +78,7 @@ void USmashCharacterStateWalk::PlayMontage(UAnimMontage* Montage, float PlayRate
 	}
 }
 
-void USmashCharacterStateWalk::StopMontage(UAnimMontage* Montage, float BlendOut) const
+void USmashCharacterStateRun::StopMontage(UAnimMontage* Montage, float BlendOut) const
 {
 	if (Character == nullptr || Montage == nullptr) return;
 	if (UAnimInstance* Anim = Character->GetMesh()->GetAnimInstance())

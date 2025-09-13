@@ -4,15 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "Characters/SmashCharacterState.h"
-#include "SmashCharacterStateIdle.generated.h"
+#include "SmashCharacterStateRun.generated.h"
 
 class UAnimMontage;
 
 /**
- * 
+ *
  */
 UCLASS(ClassGroup=(SmashCharacterState), meta=(BlueprintSpawnableComponent))
-class SMASHUE_API USmashCharacterStateIdle : public USmashCharacterState
+class SMASHUE_API USmashCharacterStateRun : public USmashCharacterState
 {
 	GENERATED_BODY()
 
@@ -26,10 +26,13 @@ public:
 	virtual void StateTick(float DeltaTime) override;
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Smash Character State Idle")
-	TObjectPtr<UAnimMontage> IdleAnim = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Smash Character State Run", meta=(DisplayName="Run Anim"))
+	TObjectPtr<UAnimMontage> RunAnim = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Smash Character State Run", meta=(DisplayName="Run Move Speed Max", ClampMin="0", UIMin="0"))
+	float RunMoveSpeedMax = 1000.f;
 
 	void PlayMontage(UAnimMontage* Montage, float PlayRate = 1.f) const;
 	void StopMontage(UAnimMontage* Montage, float BlendOut = 0.2f) const;
-	
+
 };

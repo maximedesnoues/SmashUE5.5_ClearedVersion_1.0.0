@@ -6,6 +6,8 @@
 #include "Characters/SmashCharacterState.h"
 #include "SmashCharacterStateWalk.generated.h"
 
+class UAnimMontage;
+
 /**
  * 
  */
@@ -22,5 +24,15 @@ public:
 	virtual void StateExit(ESmashCharacterStateID NextStateID) override;
 
 	virtual void StateTick(float DeltaTime) override;
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Smash Character State Walk", meta=(DisplayName="Walk Anim"))
+	TObjectPtr<UAnimMontage> WalkAnim = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Smash Character State Walk", meta=(DisplayName="Move Speed Max", ClampMin="0", UIMin="0"))
+	float MoveSpeedMax = 250.f;
+
+	void PlayMontage(UAnimMontage* Montage, float PlayRate = 1.f) const;
+	void StopMontage(UAnimMontage* Montage, float BlendOut = 0.2f) const;
 	
 };

@@ -2,6 +2,8 @@
 
 
 #include "Characters/States/SmashCharacterStateIdle.h"
+#include "Characters/SmashCharacter.h"
+#include "Animation/AnimInstance.h"
 
 ESmashCharacterStateID USmashCharacterStateIdle::GetStateID() const
 {
@@ -11,6 +13,8 @@ ESmashCharacterStateID USmashCharacterStateIdle::GetStateID() const
 void USmashCharacterStateIdle::StateEnter(ESmashCharacterStateID PreviousStateID)
 {
 	Super::StateEnter(PreviousStateID);
+
+	PlayMontage(IdleAnim, 1.f);
 
 	GEngine->AddOnScreenDebugMessage(
 		-1,
@@ -23,6 +27,8 @@ void USmashCharacterStateIdle::StateEnter(ESmashCharacterStateID PreviousStateID
 void USmashCharacterStateIdle::StateExit(ESmashCharacterStateID NextStateID)
 {
 	Super::StateExit(NextStateID);
+
+	StopMontage(IdleAnim, 0.2f);
 
 	GEngine->AddOnScreenDebugMessage(
 		-1,
@@ -42,5 +48,23 @@ void USmashCharacterStateIdle::StateTick(float DeltaTime)
 		FColor::Green,
 		TEXT("Tick StateIdle")
 	);
+}
+
+void USmashCharacterStateIdle::PlayMontage(UAnimMontage* Montage, float PlayRate) const
+{
+	if (Character == nullptr || Montage == nullptr) return;
+	if (UAnimInstance* Anim = Character->GetMesh()->GetAnimInstance())
+	{
+		Anim->Montage_Play(Montage, PlayRate);
+	}
+}
+
+void USmashCharacterStateIdle::StopMontage(UAnimMontage* Montage, float BlendOut) const
+{
+	if (Character == nullptr || Montage == nullptr) return;
+	if (UAnimInstance* Anim = Character->GetMesh()->GetAnimInstance())
+	{
+		Anim->Montage_Stop(BlendOut, Montage);
+	}
 }
 
