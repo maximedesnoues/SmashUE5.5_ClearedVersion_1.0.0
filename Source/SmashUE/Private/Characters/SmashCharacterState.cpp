@@ -3,6 +3,8 @@
 
 #include "Characters/SmashCharacterState.h"
 #include "Characters/SmashCharacterStateMachine.h"
+#include "Characters/SmashCharacter.h"
+#include "Characters/SmashCharacterSettings.h"
 
 // Sets default values for this component's properties
 USmashCharacterState::USmashCharacterState()
@@ -44,5 +46,18 @@ void USmashCharacterState::StateExit(ESmashCharacterStateID NextStateID)
 void USmashCharacterState::StateTick(float DeltaTime)
 {
 
+}
+
+float USmashCharacterState::GetInputMoveXThreshold() const
+{
+	const USmashCharacterSettings* Settings = GetDefault<USmashCharacterSettings>();
+	return Settings ? Settings->InputMoveXThreshold : 0.1f;
+}
+
+bool USmashCharacterState::IsMoveXAboveThreshold() const
+{
+	if (Character == nullptr) return false;
+	const float Threshold = GetInputMoveXThreshold();
+	return FMath::Abs(Character->GetInputMoveX()) > Threshold;
 }
 

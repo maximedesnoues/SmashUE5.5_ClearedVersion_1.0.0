@@ -50,7 +50,7 @@ void USmashCharacterStateIdle::StateTick(float DeltaTime)
 		TEXT("Tick StateIdle")
 	);
 
-	if (FMath::Abs(Character->GetInputMoveX()) > 0.1f)
+	if (IsMoveXAboveThreshold())
 	{
 		StateMachine->ChangeState(ESmashCharacterStateID::Walk);
 	}
