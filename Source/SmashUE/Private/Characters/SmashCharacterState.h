@@ -37,8 +37,5 @@ protected:
 	UPROPERTY()
 	TObjectPtr<USmashCharacterStateMachine> StateMachine;
 
-	float GetInputMoveXThreshold() const;
-	bool IsMoveXAboveThreshold() const;
-
 		
 };

@@ -7,6 +7,7 @@
 #include "SmashCharacterStateRun.generated.h"
 
 class UAnimMontage;
+class USmashCharacterSettings;
 
 /**
  *
@@ -26,13 +27,13 @@ public:
 	virtual void StateTick(float DeltaTime) override;
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Smash Character State Run", meta=(DisplayName="Run Anim"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Smash Character State Run")
 	TObjectPtr<UAnimMontage> RunAnim;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Smash Character State Run", meta=(DisplayName="Run Move Speed Max", ClampMin="0", UIMin="0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Smash Character State Run")
 	float RunMoveSpeedMax = 1000.f;
 
-	void PlayMontage(UAnimMontage* Montage, float PlayRate = 1.f) const;
-	void StopMontage(UAnimMontage* Montage, float BlendOut = 0.2f) const;
+	UPROPERTY()
+	const USmashCharacterSettings* CharacterSettings;
 
 };

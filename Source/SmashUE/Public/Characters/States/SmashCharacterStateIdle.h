@@ -7,6 +7,7 @@
 #include "SmashCharacterStateIdle.generated.h"
 
 class UAnimMontage;
+class USmashCharacterSettings;
 
 /**
  * 
@@ -25,11 +26,14 @@ public:
 
 	virtual void StateTick(float DeltaTime) override;
 
+	UFUNCTION()
+	void OnInputMoveXFast(float InputMoveX);
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Smash Character State Idle")
 	TObjectPtr<UAnimMontage> IdleAnim;
 
-	void PlayMontage(UAnimMontage* Montage, float PlayRate = 1.f) const;
-	void StopMontage(UAnimMontage* Montage, float BlendOut = 0.2f) const;
+	UPROPERTY()
+	const USmashCharacterSettings* CharacterSettings;
 	
 };

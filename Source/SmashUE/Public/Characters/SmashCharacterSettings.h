@@ -23,7 +23,7 @@ public:
     UPROPERTY(Config, EditAnywhere, Category="Inputs")
     TSoftObjectPtr<UInputMappingContext> InputMappingContext;
 
-    UPROPERTY(Config, EditAnywhere, Category="Inputs", meta=(DisplayName="Input Move X Threshold", ClampMin="0.0", UIMin="0.0"))
+    UPROPERTY(Config, EditAnywhere, Category="Inputs", meta=(DisplayName="Input Move X Threshold"))
     float InputMoveXThreshold = 0.1f;
 	
 };
