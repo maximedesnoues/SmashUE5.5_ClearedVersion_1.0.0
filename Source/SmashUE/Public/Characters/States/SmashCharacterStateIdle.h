@@ -29,6 +29,9 @@ public:
 	UFUNCTION()
 	void OnInputMoveXFast(float InputMoveX);
 
+	UFUNCTION()
+	void OnInputJump();
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Smash Character State Idle")
 	TObjectPtr<UAnimMontage> IdleAnim;

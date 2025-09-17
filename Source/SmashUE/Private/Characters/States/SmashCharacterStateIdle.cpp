@@ -5,6 +5,7 @@
 #include "Characters/SmashCharacter.h"
 #include "Characters/SmashCharacterSettings.h"
 #include "Characters/SmashCharacterStateMachine.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 ESmashCharacterStateID USmashCharacterStateIdle::GetStateID() const
 {
@@ -20,6 +21,7 @@ void USmashCharacterStateIdle::StateEnter(ESmashCharacterStateID PreviousStateID
 	Character->PlayAnimMontage(IdleAnim);
 	
 	Character->InputMoveXFastEvent.AddDynamic(this, &USmashCharacterStateIdle::OnInputMoveXFast);
+	Character->InputJumpEvent.AddDynamic(this, &USmashCharacterStateIdle::OnInputJump);
 }
 
 void USmashCharacterStateIdle::StateExit(ESmashCharacterStateID NextStateID)
@@ -27,11 +29,20 @@ void USmashCharacterStateIdle::StateExit(ESmashCharacterStateID NextStateID)
 	Super::StateExit(NextStateID);
 	
 	Character->InputMoveXFastEvent.RemoveDynamic(this, &USmashCharacterStateIdle::OnInputMoveXFast);
+	Character->InputJumpEvent.RemoveDynamic(this, &USmashCharacterStateIdle::OnInputJump);
 }
 
 void USmashCharacterStateIdle::StateTick(float DeltaTime)
 {
 	Super::StateTick(DeltaTime);
+
+	if (UCharacterMovementComponent* Move = Character->GetCharacterMovement())
+	{
+		if (Move->IsFalling())
+		{
+			StateMachine->ChangeState(ESmashCharacterStateID::Fall);
+		}
+	}
 
 	if (FMath::Abs(Character->GetInputMoveX()) > CharacterSettings->InputMoveXThreshold)
 	{
@@ -42,5 +53,13 @@ void USmashCharacterStateIdle::StateTick(float DeltaTime)
 void USmashCharacterStateIdle::OnInputMoveXFast(float InputMoveX)
 {
 	StateMachine->ChangeState(ESmashCharacterStateID::Run);
+}
+
+void USmashCharacterStateIdle::OnInputJump()
+{
+	if (Character->CanJump())
+	{
+		StateMachine->ChangeState(ESmashCharacterStateID::Jump);
+	}
 }
 

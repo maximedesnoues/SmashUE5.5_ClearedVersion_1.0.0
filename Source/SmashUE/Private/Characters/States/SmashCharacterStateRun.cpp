@@ -24,6 +24,8 @@ void USmashCharacterStateRun::StateEnter(ESmashCharacterStateID PreviousStateID)
 	}
 
 	Character->PlayAnimMontage(RunAnim);
+
+	Character->InputJumpEvent.AddDynamic(this, &USmashCharacterStateRun::OnInputJump);
 }
 
 void USmashCharacterStateRun::StateExit(ESmashCharacterStateID NextStateID)
@@ -34,11 +36,21 @@ void USmashCharacterStateRun::StateExit(ESmashCharacterStateID NextStateID)
 	{
 		Character->GetCharacterMovement()->StopMovementImmediately();
 	}
+
+	Character->InputJumpEvent.RemoveDynamic(this, &USmashCharacterStateRun::OnInputJump);
 }
 
 void USmashCharacterStateRun::StateTick(float DeltaTime)
 {
 	Super::StateTick(DeltaTime);
+
+	if (UCharacterMovementComponent* Move = Character->GetCharacterMovement())
+	{
+		if (Move->IsFalling())
+		{
+			StateMachine->ChangeState(ESmashCharacterStateID::Fall);
+		}
+	}
 
 	if (FMath::Abs(Character->GetInputMoveX()) < CharacterSettings->InputMoveXThreshold)
 	{
@@ -48,6 +60,14 @@ void USmashCharacterStateRun::StateTick(float DeltaTime)
 	{
 		Character->SetOrientX(Character->GetInputMoveX());
 		Character->AddMovementInput(FVector::ForwardVector, Character->GetOrientX());
+	}
+}
+
+void USmashCharacterStateRun::OnInputJump()
+{
+	if (Character->CanJump())
+	{
+		StateMachine->ChangeState(ESmashCharacterStateID::Jump);
 	}
 }
 

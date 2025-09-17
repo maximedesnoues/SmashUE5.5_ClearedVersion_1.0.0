@@ -103,4 +103,34 @@ private:
 
 #pragma endregion
 
+#pragma region Input Jump
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FInputJumpEvent);
+
+public:
+	UPROPERTY()
+	FInputJumpEvent InputJumpEvent;
+
+private:
+	void OnInputJump(const FInputActionValue& InputActionValue);
+
+#pragma endregion
+
+#pragma region Input Move Y Fast
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInputMoveYFastEvent, float, InputMoveY);
+
+public:
+	UPROPERTY()
+	FInputMoveYFastEvent InputMoveYFastEvent;
+
+protected:
+	UPROPERTY()
+	float InputMoveY = 0.f;
+
+private:
+	void OnInputMoveYFast(const FInputActionValue& InputActionValue);
+
+#pragma endregion
+
 };

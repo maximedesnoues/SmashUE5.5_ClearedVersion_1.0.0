@@ -21,13 +21,6 @@ void AMatchGameMode::BeginPlay()
         EAutoReceiveInput::Type InputType = PlayerStartPoint->AutoReceiveInput.GetValue();
         TSubclassOf<ASmashCharacter> SmashCharacterClass = GetSmashCharacterClassFromInputType(InputType);
         if (SmashCharacterClass == nullptr) continue;
-
-        //GEngine->AddOnScreenDebugMessage(
-        //    -1,
-        //    3.f,
-        //    FColor::Cyan,
-        //    SmashCharacterClass->GetFName().ToString()
-        //);
     }
 }
 

@@ -26,12 +26,15 @@ public:
 
 	virtual void StateTick(float DeltaTime) override;
 
+	UFUNCTION()
+	void OnInputJump();
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Smash Character State Run")
-	TObjectPtr<UAnimMontage> RunAnim;
+	float RunMoveSpeedMax = 1000.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Smash Character State Run")
-	float RunMoveSpeedMax = 1000.f;
+	TObjectPtr<UAnimMontage> RunAnim;
 
 	UPROPERTY()
 	const USmashCharacterSettings* CharacterSettings;

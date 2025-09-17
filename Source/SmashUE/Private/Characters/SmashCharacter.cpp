@@ -3,6 +3,7 @@
 
 #include "Characters/SmashCharacter.h"
 #include "Characters/SmashCharacterStateMachine.h"
+#include "Characters/SmashCharacterStateID.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "InputActionValue.h"
@@ -108,14 +109,14 @@ void ASmashCharacter::BindInputMoveXAxisAndActions(UEnhancedInputComponent* Enha
 	{
 		EnhancedInputComponent->BindAction(
 			InputData->InputActionMoveX,
-			ETriggerEvent::Completed,
+			ETriggerEvent::Triggered,
 			this,
 			&ASmashCharacter::OnInputMoveX
 		);
 
 		EnhancedInputComponent->BindAction(
 			InputData->InputActionMoveX,
-			ETriggerEvent::Triggered,
+			ETriggerEvent::Completed,
 			this,
 			&ASmashCharacter::OnInputMoveX
 		);
@@ -130,6 +131,26 @@ void ASmashCharacter::BindInputMoveXAxisAndActions(UEnhancedInputComponent* Enha
 			&ASmashCharacter::OnInputMoveXFast
 		);
 	}
+
+	if (InputData->InputActionJump)
+	{
+		EnhancedInputComponent->BindAction(
+			InputData->InputActionJump,
+			ETriggerEvent::Started,
+			this,
+			&ASmashCharacter::OnInputJump
+		);
+	}
+
+	if (InputData->InputActionMoveYFast)
+	{
+		EnhancedInputComponent->BindAction(
+			InputData->InputActionMoveYFast,
+			ETriggerEvent::Triggered,
+			this,
+			&ASmashCharacter::OnInputMoveYFast
+		);
+	}
 }
 
 void ASmashCharacter::OnInputMoveX(const FInputActionValue& InputActionValue)
@@ -141,5 +162,16 @@ void ASmashCharacter::OnInputMoveXFast(const FInputActionValue& InputActionValue
 {
 	InputMoveX = InputActionValue.Get<float>();
 	InputMoveXFastEvent.Broadcast(InputMoveX);
+}
+
+void ASmashCharacter::OnInputJump(const FInputActionValue& InputActionValue)
+{
+	InputJumpEvent.Broadcast();
+}
+
+void ASmashCharacter::OnInputMoveYFast(const FInputActionValue& InputActionValue)
+{
+	InputMoveY = InputActionValue.Get<float>();
+	InputMoveYFastEvent.Broadcast(InputMoveY);
 }
 

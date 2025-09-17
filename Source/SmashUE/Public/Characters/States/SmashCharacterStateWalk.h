@@ -29,12 +29,15 @@ public:
 	UFUNCTION()
 	void OnInputMoveXFast(float InputMoveX);
 
+	UFUNCTION()
+	void OnInputJump();
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Smash Character State Walk")
-	TObjectPtr<UAnimMontage> WalkAnim;
+	float MoveSpeedMax = 250.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Smash Character State Walk")
-	float MoveSpeedMax = 250.f;
+	TObjectPtr<UAnimMontage> WalkAnim;
 
 	UPROPERTY()
 	const USmashCharacterSettings* CharacterSettings;
