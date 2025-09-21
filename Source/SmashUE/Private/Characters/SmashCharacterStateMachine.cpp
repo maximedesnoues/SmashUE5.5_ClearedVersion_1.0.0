@@ -1,9 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Characters/SmashCharacterStateMachine.h"
-#include "Characters/SmashCharacterState.h"
+
 #include "Characters/SmashCharacter.h"
+#include "Characters/SmashCharacterState.h"
+#include "Characters/SmashCharacterStateID.h"
 
 void USmashCharacterStateMachine::Init(ASmashCharacter* InCharacter)
 {
@@ -13,27 +14,23 @@ void USmashCharacterStateMachine::Init(ASmashCharacter* InCharacter)
     ChangeState(ESmashCharacterStateID::Idle);
 }
 
-void USmashCharacterStateMachine::Tick(float DeltaTime)
-{
-    if (CurrentState == nullptr) return;
-    CurrentState->StateTick(DeltaTime);
-}
-
-ASmashCharacter* USmashCharacterStateMachine::GetCharacter() const
-{
-    return Character;
-}
-
 void USmashCharacterStateMachine::FindStates()
 {
+    if (!Character)
+    {
+        return;
+    }
+
     TArray<UActorComponent*> FoundComponents = Character->K2_GetComponentsByClass(USmashCharacterState::StaticClass());
     for (UActorComponent* StateComponent : FoundComponents)
     {
-        USmashCharacterState* State = Cast<USmashCharacterState>(StateComponent);
-        if (State == nullptr) continue;
-        if (State->GetStateID() == ESmashCharacterStateID::None) continue;
-
-        AllStates.Add(State);
+        if (USmashCharacterState* State = Cast<USmashCharacterState>(StateComponent))
+        {
+            if (State->GetStateID() != ESmashCharacterStateID::None)
+            {
+                AllStates.Add(State);
+            }
+        }
     }
 }
 
@@ -45,35 +42,48 @@ void USmashCharacterStateMachine::InitStates()
     }
 }
 
-USmashCharacterState* USmashCharacterStateMachine::GetState(ESmashCharacterStateID StateID)
+ASmashCharacter* USmashCharacterStateMachine::GetCharacter() const
+{
+    return Character;
+}
+
+USmashCharacterState* USmashCharacterStateMachine::GetState(ESmashCharacterStateID StateID) const
 {
     for (USmashCharacterState* State : AllStates)
     {
-        if (StateID == State->GetStateID())
+        if (State && State->GetStateID() == StateID)
+        {
             return State;
+        }
     }
-
+    
     return nullptr;
 }
 
 void USmashCharacterStateMachine::ChangeState(ESmashCharacterStateID NextStateID)
 {
-    USmashCharacterState* NextState = GetState(NextStateID);
-    // Do nothing if NextState not found
-    if (NextState == nullptr) return;
-
-    if (CurrentState != nullptr)
+    if (USmashCharacterState* NextState = GetState(NextStateID))
     {
-        CurrentState->StateExit(NextStateID);
-    }
+        if (CurrentState)
+        {
+            CurrentState->StateExit(NextStateID);
+        }
 
-    ESmashCharacterStateID PreviousStateID = CurrentStateID;
-    CurrentStateID = NextStateID;
-    CurrentState = NextState;
+        const ESmashCharacterStateID PreviousStateID = CurrentStateID;
+        CurrentStateID = NextStateID;
+        CurrentState = NextState;
 
-    if (CurrentState != nullptr)
-    {
         CurrentState->StateEnter(PreviousStateID);
     }
+}
+
+void USmashCharacterStateMachine::Tick(float DeltaTime)
+{
+    if (!CurrentState)
+    {
+        return;
+    }
+
+    CurrentState->StateTick(DeltaTime);
 }
 

@@ -9,13 +9,10 @@
 /**
  * 
  */
-UCLASS(NotBlueprintable, meta = (DisplayName= "Pressed Fast", NotInputConfigurable="true"))
+UCLASS(NotBlueprintable, meta=(DisplayName="Pressed Fast", NotInputConfigurable="true"))
 class SMASHUE_API UInputTriggerPressedFast : public UInputTrigger
 {
 	GENERATED_BODY()
-
-protected:
-	virtual ETriggerState UpdateState_Implementation(const UEnhancedPlayerInput* PlayerInput, FInputActionValue ModifiedValue, float DeltaTime) override;
 
 public:
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category="Trigger Settings", meta=(DisplayThumbnail="false"))
@@ -23,6 +20,9 @@ public:
 	
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category="Trigger Settings", meta=(DisplayThumbnail="false"))
 	float Delay = 0.5f;
+
+protected:
+	virtual ETriggerState UpdateState_Implementation(const UEnhancedPlayerInput* PlayerInput, FInputActionValue ModifiedValue, float DeltaTime) override;
 
 private:
 	float Timer = 0.f;

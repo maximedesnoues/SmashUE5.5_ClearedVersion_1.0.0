@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "SmashCharacterStateID.generated.h"
 
 UENUM(BlueprintType)
 enum class ESmashCharacterStateID : uint8

@@ -6,8 +6,9 @@
 #include "Characters/SmashCharacterState.h"
 #include "SmashCharacterStateRun.generated.h"
 
-class UAnimMontage;
 class USmashCharacterSettings;
+
+class UAnimMontage;
 
 /**
  *
@@ -19,11 +20,8 @@ class SMASHUE_API USmashCharacterStateRun : public USmashCharacterState
 
 public:
 	virtual ESmashCharacterStateID GetStateID() const override;
-
 	virtual void StateEnter(ESmashCharacterStateID PreviousStateID) override;
-
 	virtual void StateExit(ESmashCharacterStateID NextStateID) override;
-
 	virtual void StateTick(float DeltaTime) override;
 
 	UFUNCTION()
@@ -37,6 +35,5 @@ protected:
 	TObjectPtr<UAnimMontage> RunAnim;
 
 	UPROPERTY()
-	const USmashCharacterSettings* CharacterSettings;
-
+	const USmashCharacterSettings* CharacterSettings = nullptr;
 };

@@ -5,12 +5,18 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputMappingContext.h"
-#include "Characters/SmashCharacterInputData.h"
 #include "SmashCharacter.generated.h"
 
-class USmashCharacterStateMachine;
-class UEnhancedInputComponent;
 struct FInputActionValue;
+
+class USmashCharacterInputData;
+class USmashCharacterStateMachine;
+
+class UEnhancedInputComponent;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInputMoveXFastEvent, float, InputMoveXFast);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FInputJumpEvent);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInputFallFastEvent, float, InputFallFast);
 
 UCLASS()
 class SMASHUE_API ASmashCharacter : public ACharacter
@@ -18,7 +24,6 @@ class SMASHUE_API ASmashCharacter : public ACharacter
 	GENERATED_BODY()
 
 #pragma region Unreal Default
-
 public:
 	// Sets default values for this character's properties
 	ASmashCharacter();
@@ -33,14 +38,11 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 #pragma endregion
 
 #pragma region Orient
-
 public:
 	float GetOrientX() const;
-
 	void SetOrientX(float NewOrientX);
 
 protected:
@@ -48,89 +50,76 @@ protected:
 	float OrientX = 1.f;
 
 	void RotateMeshUsingOrientX() const;
-
 #pragma endregion
 
 #pragma region State Machine
-
 public:
 	void CreateStateMachine();
-
 	void InitStateMachine();
-
 	void TickStateMachine(float DeltaTime) const;
 
 protected:
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<USmashCharacterStateMachine> StateMachine;
-
 #pragma endregion
 
 #pragma region Input Data / Mapping Context
-
 public:
-	UPROPERTY()
-	TObjectPtr<UInputMappingContext> InputMappingContext;
+	void SetInputData(USmashCharacterInputData* InInputData);
+	void SetInputMappingContext(UInputMappingContext* InInputMappingContext);
 
+protected:
 	UPROPERTY()
 	TObjectPtr<USmashCharacterInputData> InputData;
 
-protected:
-	void SetupMappingContextIntoController() const;
+	UPROPERTY()
+	TObjectPtr<UInputMappingContext> InputMappingContext;
 
+	void SetupMappingContextIntoController() const;
 #pragma endregion
 
 #pragma region Input Move X
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInputMoveXEvent, float, InputMoveX);
-
 public:
-	float GetInputMoveX() const;
-
 	UPROPERTY()
-	FInputMoveXEvent InputMoveXFastEvent;
+	FInputMoveXFastEvent InputMoveXFastEvent;
+
+	float GetInputMoveX() const;
+	float GetInputMoveXFast() const;
 
 protected:
 	UPROPERTY()
 	float InputMoveX = 0.f;
 
+	UPROPERTY()
+	float InputMoveXFast = 0.f;
+
 private:
-	void BindInputMoveXAxisAndActions(UEnhancedInputComponent* EnhancedInputComponent);
-
+	void BindInputMoveXActions(UEnhancedInputComponent* EnhancedInputComponent);
 	void OnInputMoveX(const FInputActionValue& InputActionValue);
-
 	void OnInputMoveXFast(const FInputActionValue& InputActionValue);
-
 #pragma endregion
 
 #pragma region Input Jump
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FInputJumpEvent);
-
 public:
 	UPROPERTY()
 	FInputJumpEvent InputJumpEvent;
 
 private:
+	void BindInputJumpAction(UEnhancedInputComponent* EnhancedInputComponent);
 	void OnInputJump(const FInputActionValue& InputActionValue);
-
 #pragma endregion
 
-#pragma region Input Move Y Fast
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInputMoveYFastEvent, float, InputMoveY);
-
+#pragma region Input Fall Fast
 public:
 	UPROPERTY()
-	FInputMoveYFastEvent InputMoveYFastEvent;
+	FInputFallFastEvent InputFallFastEvent;
 
 protected:
 	UPROPERTY()
-	float InputMoveY = 0.f;
+	float InputFallFast = 0.f;
 
 private:
-	void OnInputMoveYFast(const FInputActionValue& InputActionValue);
-
+	void BindInputFallFastAction(UEnhancedInputComponent* EnhancedInputComponent);
+	void OnInputFallFast(const FInputActionValue& InputActionValue);
 #pragma endregion
-
 };

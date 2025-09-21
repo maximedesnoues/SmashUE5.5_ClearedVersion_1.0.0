@@ -6,10 +6,11 @@
 #include "GameFramework/GameModeBase.h"
 #include "MatchGameMode.generated.h"
 
+class AArenaPlayerStart;
 class ASmashCharacter;
 class USmashCharacterInputData;
+
 class UInputMappingContext;
-class AArenaPlayerStart;
 
 /**
  *
@@ -27,14 +28,11 @@ protected:
 	TArray<ASmashCharacter*> CharactersInsideArena;
 
 private:
-	USmashCharacterInputData* LoadInputDataFromConfig();
-	
-	UInputMappingContext* LoadInputMappingContextFromConfig();
+	USmashCharacterInputData* LoadInputDataFromConfig() const;
+	UInputMappingContext* LoadInputMappingContextFromConfig() const;
 
-	void FindPlayerStartActorsInArena(TArray<AArenaPlayerStart*>& ResultsActors);
-
+	void FindPlayerStartActorsInArena(TArray<AArenaPlayerStart*>& ResultsActors) const;
 	void SpawnCharacters(const TArray<AArenaPlayerStart*>& SpawnPoints);
 
 	TSubclassOf<ASmashCharacter> GetSmashCharacterClassFromInputType(EAutoReceiveInput::Type InputType) const;
-
 };

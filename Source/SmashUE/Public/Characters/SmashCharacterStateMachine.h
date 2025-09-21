@@ -7,8 +7,9 @@
 #include "SmashCharacterStateMachine.generated.h"
 
 enum class ESmashCharacterStateID : uint8;
-class USmashCharacterState;
+
 class ASmashCharacter;
+class USmashCharacterState;
 
 /**
  * 
@@ -20,19 +21,18 @@ class SMASHUE_API USmashCharacterStateMachine : public UObject
 
 public:
 	void Init(ASmashCharacter* InCharacter);
-
 	void Tick(float DeltaTime);
 
 	ASmashCharacter* GetCharacter() const;
 
+	USmashCharacterState* GetState(ESmashCharacterStateID StateID) const;
+
 	UFUNCTION(BlueprintCallable)
 	void ChangeState(ESmashCharacterStateID NextStateID);
 
-	USmashCharacterState* GetState(ESmashCharacterStateID StateID);
-
 protected:
 	UPROPERTY()
-	TObjectPtr<ASmashCharacter> Character;
+	TObjectPtr<ASmashCharacter> Character = nullptr;
 
 	UPROPERTY()
 	TArray<USmashCharacterState*> AllStates;
@@ -41,10 +41,8 @@ protected:
 	ESmashCharacterStateID CurrentStateID;
 
 	UPROPERTY()
-	TObjectPtr<USmashCharacterState> CurrentState;
+	TObjectPtr<USmashCharacterState> CurrentState = nullptr;
 
 	void FindStates();
-
 	void InitStates();
-	
 };

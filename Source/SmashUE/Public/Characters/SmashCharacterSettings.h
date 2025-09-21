@@ -4,9 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DeveloperSettings.h"
-#include "Characters/SmashCharacterInputData.h"
-#include "InputMappingContext.h"
 #include "SmashCharacterSettings.generated.h"
+
+class USmashCharacterInputData;
+
+class UInputMappingContext;
 
 /**
  * 
@@ -25,5 +27,4 @@ public:
 
     UPROPERTY(Config, EditAnywhere, Category="Inputs", meta=(DisplayName="Input Move X Threshold"))
     float InputMoveXThreshold = 0.1f;
-	
 };

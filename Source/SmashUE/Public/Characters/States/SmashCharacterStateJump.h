@@ -6,8 +6,9 @@
 #include "Characters/SmashCharacterState.h"
 #include "SmashCharacterStateJump.generated.h"
 
-class UAnimMontage;
 class USmashCharacterSettings;
+
+class UAnimMontage;
 
 /**
  *
@@ -19,22 +20,19 @@ class SMASHUE_API USmashCharacterStateJump : public USmashCharacterState
 
 public:
 	virtual ESmashCharacterStateID GetStateID() const override;
-
 	virtual void StateEnter(ESmashCharacterStateID PreviousStateID) override;
-
 	virtual void StateExit(ESmashCharacterStateID NextStateID) override;
-
 	virtual void StateTick(float DeltaTime) override;
 
 protected:
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jump")
-    float JumpWalkSpeed = 400.f;
-
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jump")
     float JumpMaxHeight = 280.f;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jump")
     float JumpDuration = 1.f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jump")
+    float JumpWalkSpeed = 400.f;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jump")
     float JumpAirControl = 1.f;
@@ -43,13 +41,11 @@ protected:
     TObjectPtr<UAnimMontage> JumpAnim;
 
     UPROPERTY()
-    const USmashCharacterSettings* CharacterSettings;
+    const USmashCharacterSettings* CharacterSettings = nullptr;
 
 private:
     FTimerHandle JumpTimerHandle;
-
     float SavedJumpZVelocity = 0.f;
 
     void StopJump();
-
 };

@@ -1,11 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Match/MatchGameMode.h"
-#include "Characters/SmashCharacter.h"
-#include "Characters/SmashCharacterSettings.h"
+
 #include "Arena/ArenaPlayerStart.h"
 #include "Arena/ArenaSettings.h"
+#include "Characters/SmashCharacter.h"
+#include "Characters/SmashCharacterInputData.h"
+#include "Characters/SmashCharacterSettings.h"
+
 #include "Kismet/GameplayStatics.h"
 
 void AMatchGameMode::BeginPlay()
@@ -15,40 +17,41 @@ void AMatchGameMode::BeginPlay()
     TArray<AArenaPlayerStart*> PlayerStartsPoints;
     FindPlayerStartActorsInArena(PlayerStartsPoints);
     SpawnCharacters(PlayerStartsPoints);
-
-    for (AArenaPlayerStart* PlayerStartPoint : PlayerStartsPoints)
-    {
-        EAutoReceiveInput::Type InputType = PlayerStartPoint->AutoReceiveInput.GetValue();
-        TSubclassOf<ASmashCharacter> SmashCharacterClass = GetSmashCharacterClassFromInputType(InputType);
-        if (SmashCharacterClass == nullptr) continue;
-    }
 }
 
-USmashCharacterInputData* AMatchGameMode::LoadInputDataFromConfig()
+USmashCharacterInputData* AMatchGameMode::LoadInputDataFromConfig() const
 {
     const USmashCharacterSettings* CharacterSettings = GetDefault<USmashCharacterSettings>();
-    if (CharacterSettings == nullptr) return nullptr;
+    if (!CharacterSettings)
+    {
+        return nullptr;
+    }
+    
     return CharacterSettings->InputData.LoadSynchronous();
 }
 
-UInputMappingContext* AMatchGameMode::LoadInputMappingContextFromConfig()
+UInputMappingContext* AMatchGameMode::LoadInputMappingContextFromConfig() const
 {
     const USmashCharacterSettings* CharacterSettings = GetDefault<USmashCharacterSettings>();
-    if (CharacterSettings == nullptr) return nullptr;
+    if (!CharacterSettings)
+    {
+        return nullptr;
+    }
+    
     return CharacterSettings->InputMappingContext.LoadSynchronous();
 }
 
-void AMatchGameMode::FindPlayerStartActorsInArena(TArray<AArenaPlayerStart*>& ResultsActors)
+void AMatchGameMode::FindPlayerStartActorsInArena(TArray<AArenaPlayerStart*>& ResultsActors) const
 {
     TArray<AActor*> FoundActors;
     UGameplayStatics::GetAllActorsOfClass(GetWorld(), AArenaPlayerStart::StaticClass(), FoundActors);
 
-    for (int i = 0; i < FoundActors.Num(); ++i)
+    for (AActor* Actor : FoundActors)
     {
-        AArenaPlayerStart* ArenaPlayerStartActor = Cast<AArenaPlayerStart>(FoundActors[i]);
-        if (ArenaPlayerStartActor == nullptr) continue;
-
-        ResultsActors.Add(ArenaPlayerStartActor);
+        if (AArenaPlayerStart* ArenaPlayerStartActor = Cast<AArenaPlayerStart>(Actor))
+        {
+            ResultsActors.Add(ArenaPlayerStartActor);
+        }
     }
 }
 
@@ -59,20 +62,26 @@ void AMatchGameMode::SpawnCharacters(const TArray<AArenaPlayerStart*>& SpawnPoin
 
     for (AArenaPlayerStart* SpawnPoint : SpawnPoints)
     {
-        EAutoReceiveInput::Type InputType = SpawnPoint->AutoReceiveInput.GetValue();
+        const EAutoReceiveInput::Type InputType = SpawnPoint->AutoReceiveInput.GetValue();
         TSubclassOf<ASmashCharacter> SmashCharacterClass = GetSmashCharacterClassFromInputType(InputType);
-        if (SmashCharacterClass == nullptr) continue;
+        if (!SmashCharacterClass)
+        {
+            continue;
+        }
 
-        ASmashCharacter* NewCharacter = GetWorld()->SpawnActorDeferred<ASmashCharacter>(
-            SmashCharacterClass,
-            SpawnPoint->GetTransform()
-        );
-        if (NewCharacter == nullptr) continue;
-        
-        NewCharacter->InputData = InputData;
-        NewCharacter->InputMappingContext = InputMappingContext;
+        ASmashCharacter* NewCharacter = GetWorld()->SpawnActorDeferred<ASmashCharacter>(SmashCharacterClass, SpawnPoint->GetTransform());
+        if (!NewCharacter)
+        {
+            continue;
+        }
+
         NewCharacter->AutoPossessPlayer = SpawnPoint->AutoReceiveInput;
+        
+        NewCharacter->SetInputData(InputData);
+        NewCharacter->SetInputMappingContext(InputMappingContext);
+        
         NewCharacter->SetOrientX(SpawnPoint->GetStartOrientX());
+        
         NewCharacter->FinishSpawning(SpawnPoint->GetTransform());
 
         CharactersInsideArena.Add(NewCharacter);
@@ -82,6 +91,10 @@ void AMatchGameMode::SpawnCharacters(const TArray<AArenaPlayerStart*>& SpawnPoin
 TSubclassOf<ASmashCharacter> AMatchGameMode::GetSmashCharacterClassFromInputType(EAutoReceiveInput::Type InputType) const
 {
     const UArenaSettings* ArenaSettings = GetDefault<UArenaSettings>();
+    if (!ArenaSettings)
+    {
+        return nullptr;
+    }
 
     switch (InputType)
     {

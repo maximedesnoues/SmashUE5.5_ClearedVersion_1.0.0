@@ -6,8 +6,9 @@
 #include "Characters/SmashCharacterState.h"
 #include "SmashCharacterStateFall.generated.h"
 
-class UAnimMontage;
 class USmashCharacterSettings;
+
+class UAnimMontage;
 
 /**
  *
@@ -19,23 +20,14 @@ class SMASHUE_API USmashCharacterStateFall : public USmashCharacterState
 
 public:
     virtual ESmashCharacterStateID GetStateID() const override;
-
     virtual void StateEnter(ESmashCharacterStateID PreviousStateID) override;
-
     virtual void StateExit(ESmashCharacterStateID NextStateID) override;
-
     virtual void StateTick(float DeltaTime) override;
 
     UFUNCTION()
-    void OnInputMoveYFast(float InputMoveY);
+    void OnInputFallFast(float InputFallFast);
 
 protected:
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Fall")
-    float FallHorizontalMoveSpeed = 400.f;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Fall")
-    float FallAirControl = 1.f;
-
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Fall")
     float FallGravityScale = 3.f;
 
@@ -43,9 +35,14 @@ protected:
     float FallFastGravityScale = 100.f;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Fall")
+    float FallHorizontalMoveSpeed = 400.f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Fall")
+    float FallAirControl = 1.f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Fall")
     TObjectPtr<UAnimMontage> FallAnim;
 
     UPROPERTY()
-    const USmashCharacterSettings* CharacterSettings;
-
+    const USmashCharacterSettings* CharacterSettings = nullptr;
 };

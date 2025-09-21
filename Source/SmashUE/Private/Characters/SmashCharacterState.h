@@ -4,9 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Characters/SmashCharacterStateID.h"
 #include "SmashCharacterState.generated.h"
 
+enum class ESmashCharacterStateID : uint8;
 
 class ASmashCharacter;
 class USmashCharacterStateMachine;
@@ -21,21 +21,15 @@ public:
 	USmashCharacterState();
 
 	virtual ESmashCharacterStateID GetStateID() const;
-
 	virtual void StateInit(USmashCharacterStateMachine* InStateMachine);
-
 	virtual void StateEnter(ESmashCharacterStateID PreviousStateID);
-
 	virtual void StateExit(ESmashCharacterStateID NextStateID);
-
 	virtual void StateTick(float DeltaTime);
 
 protected:
 	UPROPERTY()
-	TObjectPtr<ASmashCharacter> Character;
+	TObjectPtr<USmashCharacterStateMachine> StateMachine = nullptr;
 
 	UPROPERTY()
-	TObjectPtr<USmashCharacterStateMachine> StateMachine;
-
-		
+	TObjectPtr<ASmashCharacter> Character = nullptr;
 };
