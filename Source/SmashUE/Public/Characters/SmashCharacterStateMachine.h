@@ -32,7 +32,7 @@ public:
 
 protected:
 	UPROPERTY()
-	TObjectPtr<ASmashCharacter> Character = nullptr;
+	TObjectPtr<ASmashCharacter> Character;
 
 	UPROPERTY()
 	TArray<USmashCharacterState*> AllStates;
@@ -41,7 +41,7 @@ protected:
 	ESmashCharacterStateID CurrentStateID;
 
 	UPROPERTY()
-	TObjectPtr<USmashCharacterState> CurrentState = nullptr;
+	TObjectPtr<USmashCharacterState> CurrentState;
 
 	void FindStates();
 	void InitStates();

@@ -28,8 +28,8 @@ public:
 
 protected:
 	UPROPERTY()
-	TObjectPtr<USmashCharacterStateMachine> StateMachine = nullptr;
+	TObjectPtr<USmashCharacterStateMachine> StateMachine;
 
 	UPROPERTY()
-	TObjectPtr<ASmashCharacter> Character = nullptr;
+	TObjectPtr<ASmashCharacter> Character;
 };
