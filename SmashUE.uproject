@@ -7,12 +7,7 @@
 		{
 			"Name": "SmashUE",
 			"Type": "Runtime",
-			"LoadingPhase": "Default",
-			"AdditionalDependencies": [
-				"Engine",
-				"DeveloperSettings",
-				"CoreUObject"
-			]
+			"LoadingPhase": "Default"
 		}
 	],
 	"Plugins": [
