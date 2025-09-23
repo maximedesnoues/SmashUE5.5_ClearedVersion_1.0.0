@@ -18,11 +18,6 @@ void USmashCharacterStateFall::StateEnter(ESmashCharacterStateID PreviousStateID
 {
     Super::StateEnter(PreviousStateID);
 
-    if (!Character)
-    {
-        return;
-    }
-
     CharacterSettings = GetDefault<USmashCharacterSettings>();
 
     Character->InputFallFastEvent.AddDynamic(this, &USmashCharacterStateFall::OnInputFallFast);
@@ -44,11 +39,6 @@ void USmashCharacterStateFall::StateExit(ESmashCharacterStateID NextStateID)
 {
     Super::StateExit(NextStateID);
 
-    if (!Character)
-    {
-        return;
-    }
-
     Character->InputFallFastEvent.RemoveDynamic(this, &USmashCharacterStateFall::OnInputFallFast);
 
     if (UCharacterMovementComponent* Move = Character->GetCharacterMovement())
@@ -61,11 +51,6 @@ void USmashCharacterStateFall::StateTick(float DeltaTime)
 {
     Super::StateTick(DeltaTime);
 
-    if (!Character)
-    {
-        return;
-    }
-
     if (UCharacterMovementComponent* Move = Character->GetCharacterMovement())
     {
         if (Move->IsMovingOnGround())
@@ -75,7 +60,7 @@ void USmashCharacterStateFall::StateTick(float DeltaTime)
         }
     }
 
-    if (CharacterSettings && FMath::Abs(Character->GetInputMoveX()) > CharacterSettings->InputMoveXThreshold)
+    if (FMath::Abs(Character->GetInputMoveX()) > CharacterSettings->InputMoveXThreshold)
     {
         Character->SetOrientX(Character->GetInputMoveX());
         Character->AddMovementInput(FVector::ForwardVector, Character->GetOrientX());
@@ -84,11 +69,6 @@ void USmashCharacterStateFall::StateTick(float DeltaTime)
 
 void USmashCharacterStateFall::OnInputFallFast(float InputFallFast)
 {
-    if (!Character)
-    {
-        return;
-    }
-    
     if (UCharacterMovementComponent* Move = Character->GetCharacterMovement())
     {
         if (InputFallFast < -0.5f)

@@ -6,10 +6,10 @@
 #include "UObject/NoExportTypes.h"
 #include "SmashCharacterStateMachine.generated.h"
 
-enum class ESmashCharacterStateID : uint8;
-
 class ASmashCharacter;
 class USmashCharacterState;
+
+enum class ESmashCharacterStateID : uint8;
 
 /**
  * 
@@ -32,7 +32,7 @@ public:
 
 protected:
 	UPROPERTY()
-	TObjectPtr<ASmashCharacter> Character;
+	TObjectPtr<ASmashCharacter> Character = nullptr;
 
 	UPROPERTY()
 	TArray<USmashCharacterState*> AllStates;
@@ -41,7 +41,7 @@ protected:
 	ESmashCharacterStateID CurrentStateID;
 
 	UPROPERTY()
-	TObjectPtr<USmashCharacterState> CurrentState;
+	TObjectPtr<USmashCharacterState> CurrentState = nullptr;
 
 	void FindStates();
 	void InitStates();

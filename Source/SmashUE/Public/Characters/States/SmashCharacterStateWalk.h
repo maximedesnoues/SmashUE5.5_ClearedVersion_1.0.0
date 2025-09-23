@@ -35,7 +35,7 @@ protected:
 	float MoveSpeedMax = 250.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Smash Character State Walk")
-	TObjectPtr<UAnimMontage> WalkAnim;
+	TObjectPtr<UAnimMontage> WalkAnim = nullptr;
 
 	UPROPERTY()
 	const USmashCharacterSettings* CharacterSettings = nullptr;

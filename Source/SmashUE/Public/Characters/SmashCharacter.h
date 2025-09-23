@@ -7,12 +7,12 @@
 #include "InputMappingContext.h"
 #include "SmashCharacter.generated.h"
 
-struct FInputActionValue;
-
 class USmashCharacterInputData;
 class USmashCharacterStateMachine;
 
 class UEnhancedInputComponent;
+
+struct FInputActionValue;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInputMoveXFastEvent, float, InputMoveXFast);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FInputJumpEvent);
@@ -24,6 +24,7 @@ class SMASHUE_API ASmashCharacter : public ACharacter
 	GENERATED_BODY()
 
 #pragma region Unreal Default
+
 public:
 	// Sets default values for this character's properties
 	ASmashCharacter();
@@ -38,9 +39,11 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
 #pragma endregion
 
 #pragma region Orient
+
 public:
 	float GetOrientX() const;
 	void SetOrientX(float NewOrientX);
@@ -50,9 +53,11 @@ protected:
 	float OrientX = 1.f;
 
 	void RotateMeshUsingOrientX() const;
+
 #pragma endregion
 
 #pragma region State Machine
+
 public:
 	void CreateStateMachine();
 	void InitStateMachine();
@@ -60,25 +65,29 @@ public:
 
 protected:
 	UPROPERTY(BlueprintReadOnly)
-	TObjectPtr<USmashCharacterStateMachine> StateMachine;
+	TObjectPtr<USmashCharacterStateMachine> StateMachine = nullptr;
+
 #pragma endregion
 
 #pragma region Input Data / Mapping Context
+
 public:
 	void SetInputData(USmashCharacterInputData* InInputData);
 	void SetInputMappingContext(UInputMappingContext* InInputMappingContext);
 
 protected:
 	UPROPERTY()
-	TObjectPtr<USmashCharacterInputData> InputData;
+	TObjectPtr<USmashCharacterInputData> InputData = nullptr;
 
 	UPROPERTY()
-	TObjectPtr<UInputMappingContext> InputMappingContext;
+	TObjectPtr<UInputMappingContext> InputMappingContext = nullptr;
 
 	void SetupMappingContextIntoController() const;
+
 #pragma endregion
 
 #pragma region Input Move X
+
 public:
 	UPROPERTY()
 	FInputMoveXFastEvent InputMoveXFastEvent;
@@ -97,9 +106,11 @@ private:
 	void BindInputMoveXActions(UEnhancedInputComponent* EnhancedInputComponent);
 	void OnInputMoveX(const FInputActionValue& InputActionValue);
 	void OnInputMoveXFast(const FInputActionValue& InputActionValue);
+
 #pragma endregion
 
 #pragma region Input Jump
+
 public:
 	UPROPERTY()
 	FInputJumpEvent InputJumpEvent;
@@ -107,9 +118,11 @@ public:
 private:
 	void BindInputJumpAction(UEnhancedInputComponent* EnhancedInputComponent);
 	void OnInputJump(const FInputActionValue& InputActionValue);
+
 #pragma endregion
 
 #pragma region Input Fall Fast
+
 public:
 	UPROPERTY()
 	FInputFallFastEvent InputFallFastEvent;
@@ -121,5 +134,6 @@ protected:
 private:
 	void BindInputFallFastAction(UEnhancedInputComponent* EnhancedInputComponent);
 	void OnInputFallFast(const FInputActionValue& InputActionValue);
+
 #pragma endregion
 };

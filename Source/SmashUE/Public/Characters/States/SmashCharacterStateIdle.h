@@ -32,7 +32,7 @@ public:
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Smash Character State Idle")
-	TObjectPtr<UAnimMontage> IdleAnim;
+	TObjectPtr<UAnimMontage> IdleAnim = nullptr;
 
 	UPROPERTY()
 	const USmashCharacterSettings* CharacterSettings = nullptr;

@@ -6,10 +6,10 @@
 #include "Components/ActorComponent.h"
 #include "SmashCharacterState.generated.h"
 
-enum class ESmashCharacterStateID : uint8;
-
 class ASmashCharacter;
 class USmashCharacterStateMachine;
+
+enum class ESmashCharacterStateID : uint8;
 
 UCLASS(Abstract)
 class SMASHUE_API USmashCharacterState : public UActorComponent
@@ -28,8 +28,8 @@ public:
 
 protected:
 	UPROPERTY()
-	TObjectPtr<USmashCharacterStateMachine> StateMachine;
+	TObjectPtr<USmashCharacterStateMachine> StateMachine = nullptr;
 
 	UPROPERTY()
-	TObjectPtr<ASmashCharacter> Character;
+	TObjectPtr<ASmashCharacter> Character = nullptr;
 };

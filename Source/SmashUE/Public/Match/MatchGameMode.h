@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Engine/EngineBaseTypes.h"
 #include "GameFramework/GameModeBase.h"
 #include "MatchGameMode.generated.h"
 

@@ -41,7 +41,7 @@ protected:
     float FallAirControl = 1.f;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Fall")
-    TObjectPtr<UAnimMontage> FallAnim;
+    TObjectPtr<UAnimMontage> FallAnim = nullptr;
 
     UPROPERTY()
     const USmashCharacterSettings* CharacterSettings = nullptr;

@@ -18,11 +18,6 @@ void USmashCharacterStateIdle::StateEnter(ESmashCharacterStateID PreviousStateID
 {
 	Super::StateEnter(PreviousStateID);
 
-	if (!Character)
-	{
-		return;
-	}
-
 	CharacterSettings = GetDefault<USmashCharacterSettings>();
 
 	Character->InputMoveXFastEvent.AddDynamic(this, &USmashCharacterStateIdle::OnInputMoveXFast);
@@ -37,11 +32,6 @@ void USmashCharacterStateIdle::StateEnter(ESmashCharacterStateID PreviousStateID
 void USmashCharacterStateIdle::StateExit(ESmashCharacterStateID NextStateID)
 {
 	Super::StateExit(NextStateID);
-
-	if (!Character)
-	{
-		return;
-	}
 	
 	Character->InputMoveXFastEvent.RemoveDynamic(this, &USmashCharacterStateIdle::OnInputMoveXFast);
 	Character->InputJumpEvent.RemoveDynamic(this, &USmashCharacterStateIdle::OnInputJump);
@@ -50,11 +40,6 @@ void USmashCharacterStateIdle::StateExit(ESmashCharacterStateID NextStateID)
 void USmashCharacterStateIdle::StateTick(float DeltaTime)
 {
 	Super::StateTick(DeltaTime);
-
-	if (!Character)
-	{
-		return;
-	}
 
 	if (UCharacterMovementComponent* Move = Character->GetCharacterMovement())
 	{
@@ -65,7 +50,7 @@ void USmashCharacterStateIdle::StateTick(float DeltaTime)
 		}
 	}
 
-	if (CharacterSettings && FMath::Abs(Character->GetInputMoveX()) > CharacterSettings->InputMoveXThreshold)
+	if (FMath::Abs(Character->GetInputMoveX()) > CharacterSettings->InputMoveXThreshold)
 	{
 		StateMachine->ChangeState(ESmashCharacterStateID::Walk);
 		return;
@@ -74,21 +59,11 @@ void USmashCharacterStateIdle::StateTick(float DeltaTime)
 
 void USmashCharacterStateIdle::OnInputMoveXFast(float InputMoveXFast)
 {
-	if (!StateMachine)
-	{
-		return;
-	}
-	
 	StateMachine->ChangeState(ESmashCharacterStateID::Run);
 }
 
 void USmashCharacterStateIdle::OnInputJump()
 {
-	if (!StateMachine)
-	{
-		return;
-	}
-	
 	if (!Character->CanJump())
 	{
 		return;

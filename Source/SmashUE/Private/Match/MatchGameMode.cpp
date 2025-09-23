@@ -8,6 +8,7 @@
 #include "Characters/SmashCharacterInputData.h"
 #include "Characters/SmashCharacterSettings.h"
 
+#include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 
 void AMatchGameMode::BeginPlay()

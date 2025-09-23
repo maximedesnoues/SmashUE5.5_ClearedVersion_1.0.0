@@ -16,11 +16,6 @@ void USmashCharacterStateMachine::Init(ASmashCharacter* InCharacter)
 
 void USmashCharacterStateMachine::FindStates()
 {
-    if (!Character)
-    {
-        return;
-    }
-
     TArray<UActorComponent*> FoundComponents = Character->K2_GetComponentsByClass(USmashCharacterState::StaticClass());
     for (UActorComponent* StateComponent : FoundComponents)
     {
@@ -51,7 +46,7 @@ USmashCharacterState* USmashCharacterStateMachine::GetState(ESmashCharacterState
 {
     for (USmashCharacterState* State : AllStates)
     {
-        if (State && State->GetStateID() == StateID)
+        if (State->GetStateID() == StateID)
         {
             return State;
         }
@@ -73,7 +68,10 @@ void USmashCharacterStateMachine::ChangeState(ESmashCharacterStateID NextStateID
         CurrentStateID = NextStateID;
         CurrentState = NextState;
 
-        CurrentState->StateEnter(PreviousStateID);
+        if (CurrentState)
+        {
+            CurrentState->StateEnter(PreviousStateID);
+        }
     }
 }
 

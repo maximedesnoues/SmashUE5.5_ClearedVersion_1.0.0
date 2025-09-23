@@ -18,14 +18,14 @@ class SMASHUE_API USmashCharacterInputData : public UDataAsset
 
 public:
 	UPROPERTY(EditAnywhere, meta=(DisplayName="Input Action Move X"))
-	TObjectPtr<UInputAction> InputActionMoveX;
+	TObjectPtr<UInputAction> InputActionMoveX = nullptr;
 
 	UPROPERTY(EditAnywhere, meta=(DisplayName="Input Action Move X Fast"))
-	TObjectPtr<UInputAction> InputActionMoveXFast;
+	TObjectPtr<UInputAction> InputActionMoveXFast = nullptr;
 
 	UPROPERTY(EditAnywhere, meta=(DisplayName="Input Action Jump"))
-	TObjectPtr<UInputAction> InputActionJump;
+	TObjectPtr<UInputAction> InputActionJump = nullptr;
 
 	UPROPERTY(EditAnywhere, meta=(DisplayName="Input Action Fall Fast"))
-	TObjectPtr<UInputAction> InputActionFallFast;
+	TObjectPtr<UInputAction> InputActionFallFast = nullptr;
 };

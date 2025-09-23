@@ -18,11 +18,6 @@ void USmashCharacterStateJump::StateEnter(ESmashCharacterStateID PreviousStateID
 {
     Super::StateEnter(PreviousStateID);
 
-    if (!Character)
-    {
-        return;
-    }
-
     CharacterSettings = GetDefault<USmashCharacterSettings>();
     
     if (UCharacterMovementComponent* Move = Character->GetCharacterMovement())
@@ -30,10 +25,10 @@ void USmashCharacterStateJump::StateEnter(ESmashCharacterStateID PreviousStateID
         SavedJumpZVelocity = Move->JumpZVelocity;
 
         const float GravityZ = Move->GetGravityZ();
-        const float g = FMath::Abs(GravityZ);
-        const float TargetV = FMath::Sqrt(2.f * g * JumpMaxHeight);
+        const float GravityAcceleration = FMath::Abs(GravityZ);
+        const float InitialJumpZVelocity = FMath::Sqrt(2.f * GravityAcceleration * JumpMaxHeight);
 
-        Move->JumpZVelocity = TargetV;
+        Move->JumpZVelocity = InitialJumpZVelocity;
         Move->MaxWalkSpeed = JumpWalkSpeed;
         Move->AirControl = JumpAirControl;
     }
@@ -55,11 +50,6 @@ void USmashCharacterStateJump::StateExit(ESmashCharacterStateID NextStateID)
 {
     Super::StateExit(NextStateID);
 
-    if (!Character)
-    {
-        return;
-    }
-
     Character->GetWorldTimerManager().ClearTimer(JumpTimerHandle);
 
     if (UCharacterMovementComponent* Move = Character->GetCharacterMovement())
@@ -72,11 +62,6 @@ void USmashCharacterStateJump::StateTick(float DeltaTime)
 {
     Super::StateTick(DeltaTime);
 
-    if (!Character)
-    {
-        return;
-    }
-
     if (UCharacterMovementComponent* Move = Character->GetCharacterMovement())
     {
         if (Move->IsFalling() && Character->GetVelocity().Z <= 0.f)
@@ -86,7 +71,7 @@ void USmashCharacterStateJump::StateTick(float DeltaTime)
         }
     }
 
-    if (CharacterSettings && FMath::Abs(Character->GetInputMoveX()) > CharacterSettings->InputMoveXThreshold)
+    if (FMath::Abs(Character->GetInputMoveX()) > CharacterSettings->InputMoveXThreshold)
     {
         Character->SetOrientX(Character->GetInputMoveX());
         Character->AddMovementInput(FVector::ForwardVector, Character->GetOrientX());
@@ -95,11 +80,6 @@ void USmashCharacterStateJump::StateTick(float DeltaTime)
 
 void USmashCharacterStateJump::StopJump()
 {
-    if (!Character)
-    {
-        return;
-    }
-
     if (UCharacterMovementComponent* Move = Character->GetCharacterMovement())
     {
         FVector Velocity = Character->GetVelocity();

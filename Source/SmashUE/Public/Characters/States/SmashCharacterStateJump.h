@@ -38,7 +38,7 @@ protected:
     float JumpAirControl = 1.f;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jump")
-    TObjectPtr<UAnimMontage> JumpAnim;
+    TObjectPtr<UAnimMontage> JumpAnim = nullptr;
 
     UPROPERTY()
     const USmashCharacterSettings* CharacterSettings = nullptr;

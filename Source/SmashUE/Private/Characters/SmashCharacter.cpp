@@ -6,10 +6,13 @@
 #include "Characters/SmashCharacterStateMachine.h"
 
 #include "Components/SkeletalMeshComponent.h"
+#include "Engine/LocalPlayer.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "GameFramework/PlayerController.h"
+#include "InputAction.h"
 #include "InputActionValue.h"
+#include "InputMappingContext.h"
 
 // Sets default values
 ASmashCharacter::ASmashCharacter()
@@ -146,7 +149,7 @@ float ASmashCharacter::GetInputMoveXFast() const
 
 void ASmashCharacter::BindInputMoveXActions(UEnhancedInputComponent* EnhancedInputComponent)
 {
-	if (!InputData || !EnhancedInputComponent)
+	if (!InputData)
 	{
 		return;
 	}
@@ -176,7 +179,7 @@ void ASmashCharacter::OnInputMoveXFast(const FInputActionValue& InputActionValue
 
 void ASmashCharacter::BindInputJumpAction(UEnhancedInputComponent* EnhancedInputComponent)
 {
-	if (!InputData || !EnhancedInputComponent)
+	if (!InputData)
 	{
 		return;
 	}
@@ -194,7 +197,7 @@ void ASmashCharacter::OnInputJump(const FInputActionValue& InputActionValue)
 
 void ASmashCharacter::BindInputFallFastAction(UEnhancedInputComponent* EnhancedInputComponent)
 {
-	if (!InputData || !EnhancedInputComponent)
+	if (!InputData)
 	{
 		return;
 	}
