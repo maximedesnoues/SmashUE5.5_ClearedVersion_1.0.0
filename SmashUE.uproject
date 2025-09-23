@@ -1,8 +1,6 @@
 {
 	"FileVersion": 3,
 	"EngineAssociation": "5.5",
-	"Category": "",
-	"Description": "",
 	"Modules": [
 		{
 			"Name": "SmashUE",
@@ -12,11 +10,8 @@
 	],
 	"Plugins": [
 		{
-			"Name": "ModelingToolsEditorMode",
-			"Enabled": true,
-			"TargetAllowList": [
-				"Editor"
-			]
+			"Name": "LocalMultiplayer",
+			"Enabled": true
 		}
 	]
 }
