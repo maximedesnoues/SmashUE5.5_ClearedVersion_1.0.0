@@ -45,14 +45,14 @@ class LOCALMULTIPLAYER_API ULocalMultiplayerSettings : public UDeveloperSettings
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(Config, EditAnywhere, Category="Local Multiplayer")
-	int NbMaxGamepads = 4;
+    UPROPERTY(Config, EditAnywhere, Category="Local Multiplayer")
+    TArray<FLocalMultiplayerProfileData> KeyboardProfilesData;
 
     UPROPERTY(Config, EditAnywhere, Category="Local Multiplayer")
     FLocalMultiplayerProfileData GamepadProfileData;
 
     UPROPERTY(Config, EditAnywhere, Category="Local Multiplayer")
-    TArray<FLocalMultiplayerProfileData> KeyboardProfilesData;
+    int NbMaxGamepads = 4;
 
 	int GetNbKeyboardProfiles() const;
 	int FindKeyboardProfileIndexFromKey(const FKey& Key, ELocalMultiplayerInputMappingType MappingType) const;

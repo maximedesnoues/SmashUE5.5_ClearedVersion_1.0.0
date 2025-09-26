@@ -4,12 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "SmashCharacterStateID.h"
 #include "SmashCharacterStateMachine.generated.h"
 
 class ASmashCharacter;
 class USmashCharacterState;
-
-enum class ESmashCharacterStateID : uint8;
 
 /**
  * 
