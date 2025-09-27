@@ -47,11 +47,11 @@ int ULocalMultiplayerSettings::GetNbKeyboardProfiles() const
 
 int ULocalMultiplayerSettings::FindKeyboardProfileIndexFromKey(const FKey& Key, ELocalMultiplayerInputMappingType MappingType) const
 {
-	for (int Index = 0; Index < KeyboardProfilesData.Num(); ++Index)
+	for (int KeyboardProfileIndex = 0; KeyboardProfileIndex < KeyboardProfilesData.Num(); ++KeyboardProfileIndex)
 	{
-		if (KeyboardProfilesData[Index].ContainsKey(Key, MappingType))
+		if (KeyboardProfilesData[KeyboardProfileIndex].ContainsKey(Key, MappingType))
 		{
-			return Index;
+			return KeyboardProfileIndex;
 		}
 	}
 	
