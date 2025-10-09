@@ -20,7 +20,7 @@ public class SmashUE : ModuleRules
 
 		PrivateDependencyModuleNames.AddRange(new string[]
 		{
-
-		});
+            "LocalMultiplayer"
+        });
 	}
 }

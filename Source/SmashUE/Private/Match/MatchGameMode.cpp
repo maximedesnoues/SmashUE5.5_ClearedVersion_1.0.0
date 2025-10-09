@@ -9,6 +9,10 @@
 #include "Characters/SmashCharacterInputData.h"
 #include "Characters/SmashCharacterSettings.h"
 
+#include "LocalMultiplayerSettings.h"
+#include "LocalMultiplayerSubsystem.h"
+
+#include "Engine/GameInstance.h"
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -16,9 +20,13 @@ void AMatchGameMode::BeginPlay()
 {
     Super::BeginPlay();
 
+    CreateAndInitPlayers();
+
     TArray<AArenaPlayerStart*> PlayerStartsPoints;
     FindPlayerStartActorsInArena(PlayerStartsPoints);
     SpawnCharacters(PlayerStartsPoints);
+
+    PossessSpawnedCharacters();
 }
 
 USmashCharacterInputData* AMatchGameMode::LoadInputDataFromConfig() const
@@ -41,6 +49,29 @@ UInputMappingContext* AMatchGameMode::LoadInputMappingContextFromConfig() const
     }
     
     return CharacterSettings->InputMappingContext.LoadSynchronous();
+}
+
+void AMatchGameMode::CreateAndInitPlayers() const
+{
+    UWorld* World = GetWorld();
+    if (!World)
+    {
+        return;
+    }
+    
+    UGameInstance* GameInstance = World->GetGameInstance();
+    if (!GameInstance)
+    {
+        return;
+    }
+
+    ULocalMultiplayerSubsystem* LocalMultiplayerSubsystem = GameInstance->GetSubsystem<ULocalMultiplayerSubsystem>();
+    if (!LocalMultiplayerSubsystem)
+    {
+        return;
+    }
+
+    LocalMultiplayerSubsystem->CreateAndInitPlayers(ELocalMultiplayerInputMappingType::InGame);
 }
 
 void AMatchGameMode::FindPlayerStartActorsInArena(TArray<AArenaPlayerStart*>& ResultsActors) const
@@ -77,16 +108,37 @@ void AMatchGameMode::SpawnCharacters(const TArray<AArenaPlayerStart*>& SpawnPoin
             continue;
         }
 
-        NewCharacter->AutoPossessPlayer = SpawnPoint->AutoReceiveInput;
+        // NewCharacter->AutoPossessPlayer = SpawnPoint->AutoReceiveInput;
         
         NewCharacter->SetInputData(InputData);
-        NewCharacter->SetInputMappingContext(InputMappingContext);
+        // NewCharacter->SetInputMappingContext(InputMappingContext);
         
         NewCharacter->SetOrientX(SpawnPoint->GetStartOrientX());
         
         NewCharacter->FinishSpawning(SpawnPoint->GetTransform());
 
         CharactersInsideArena.Add(NewCharacter);
+    }
+}
+
+void AMatchGameMode::PossessSpawnedCharacters()
+{
+    if (UGameInstance* GameInstance = GetGameInstance())
+    {
+        const int LocalPlayerCount = GameInstance->GetLocalPlayers().Num();
+        const int CharacterCount = CharactersInsideArena.Num();
+        const int CountToAssign = FMath::Min(LocalPlayerCount, CharacterCount);
+
+        for (int i = 0; i < CountToAssign; ++i)
+        {
+            if (APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, i))
+            {
+                if (ASmashCharacter* Character = CharactersInsideArena[i])
+                {
+                    PlayerController->Possess(Character);
+                }
+            }
+        }
     }
 }
 
