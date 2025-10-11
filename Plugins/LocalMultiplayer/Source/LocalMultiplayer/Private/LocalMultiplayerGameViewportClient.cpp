@@ -60,7 +60,6 @@ bool ULocalMultiplayerGameViewportClient::InputKey(const FInputKeyEventArgs& Eve
 		const int PlayerIndex = LocalMultiplayerSubsystem->AssignNewPlayerToKeyboardProfileIndex(KeyboardProfileIndex);
 		if (PlayerIndex != -1)
 		{
-			LocalMultiplayerSubsystem->AssignKeyboardInputMapping(PlayerIndex, KeyboardProfileIndex, MappingType);
 			if (ULocalPlayer* LocalPlayer = GameInstancePtr->GetLocalPlayerByIndex(PlayerIndex))
 			{
 				if (APlayerController* PlayerController = LocalPlayer->GetPlayerController(WorldPtr))
@@ -129,7 +128,6 @@ bool ULocalMultiplayerGameViewportClient::InputAxis(FViewport* InViewport, FInpu
 		const int PlayerIndex = LocalMultiplayerSubsystem->AssignNewPlayerToKeyboardProfileIndex(KeyboardProfileIndex);
 		if (PlayerIndex != -1)
 		{
-			LocalMultiplayerSubsystem->AssignKeyboardInputMapping(PlayerIndex, KeyboardProfileIndex, MappingType);
 			if (ULocalPlayer* LocalPlayer = GameInstancePtr->GetLocalPlayerByIndex(PlayerIndex))
 			{
 				if (APlayerController* PlayerController = LocalPlayer->GetPlayerController(WorldPtr))

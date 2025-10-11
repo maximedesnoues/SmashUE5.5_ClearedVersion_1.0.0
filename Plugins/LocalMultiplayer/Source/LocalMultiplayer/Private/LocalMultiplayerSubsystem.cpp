@@ -24,7 +24,7 @@ void ULocalMultiplayerSubsystem::CreateAndInitPlayers(ELocalMultiplayerInputMapp
 		return;
 	}
 
-	const int TargetPlayers = LocalMultiplayerSettings->GetNbKeyboardProfiles() + LocalMultiplayerSettings->NbMaxGamepads;
+	const int TargetPlayers = LocalMultiplayerSettings->GetNbKeyboardProfiles();
 
 	while (GameInstance->GetLocalPlayers().Num() < TargetPlayers)
 	{
@@ -41,12 +41,6 @@ void ULocalMultiplayerSubsystem::CreateAndInitPlayers(ELocalMultiplayerInputMapp
 	{
 		const int PlayerIndex = AssignNewPlayerToKeyboardProfileIndex(KeyboardProfileIndex);
 		AssignKeyboardInputMapping(PlayerIndex, KeyboardProfileIndex, MappingType);
-	}
-
-	for (int DeviceID = 0; DeviceID < LocalMultiplayerSettings->NbMaxGamepads; ++DeviceID)
-	{
-		const int PlayerIndex = AssignNewPlayerToGamepadDeviceID(DeviceID);
-		AssignGamepadInputMapping(PlayerIndex, MappingType);
 	}
 }
 

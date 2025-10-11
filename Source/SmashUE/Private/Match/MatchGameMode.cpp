@@ -25,8 +25,6 @@ void AMatchGameMode::BeginPlay()
     TArray<AArenaPlayerStart*> PlayerStartsPoints;
     FindPlayerStartActorsInArena(PlayerStartsPoints);
     SpawnCharacters(PlayerStartsPoints);
-
-    PossessSpawnedCharacters();
 }
 
 USmashCharacterInputData* AMatchGameMode::LoadInputDataFromConfig() const
@@ -107,8 +105,8 @@ void AMatchGameMode::SpawnCharacters(const TArray<AArenaPlayerStart*>& SpawnPoin
         {
             continue;
         }
-
-        // NewCharacter->AutoPossessPlayer = SpawnPoint->AutoReceiveInput;
+        
+        NewCharacter->AutoPossessPlayer = SpawnPoint->AutoReceiveInput;
         
         NewCharacter->SetInputData(InputData);
         // NewCharacter->SetInputMappingContext(InputMappingContext);
@@ -118,27 +116,6 @@ void AMatchGameMode::SpawnCharacters(const TArray<AArenaPlayerStart*>& SpawnPoin
         NewCharacter->FinishSpawning(SpawnPoint->GetTransform());
 
         CharactersInsideArena.Add(NewCharacter);
-    }
-}
-
-void AMatchGameMode::PossessSpawnedCharacters()
-{
-    if (UGameInstance* GameInstance = GetGameInstance())
-    {
-        const int LocalPlayerCount = GameInstance->GetLocalPlayers().Num();
-        const int CharacterCount = CharactersInsideArena.Num();
-        const int CountToAssign = FMath::Min(LocalPlayerCount, CharacterCount);
-
-        for (int i = 0; i < CountToAssign; ++i)
-        {
-            if (APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, i))
-            {
-                if (ASmashCharacter* Character = CharactersInsideArena[i])
-                {
-                    PlayerController->Possess(Character);
-                }
-            }
-        }
     }
 }
 
