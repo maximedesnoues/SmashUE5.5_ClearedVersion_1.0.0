@@ -21,42 +21,53 @@ void USmashCharacterStateJump::StateEnter(ESmashCharacterStateID PreviousStateID
 
     CharacterSettings = GetDefault<USmashCharacterSettings>();
     
-    if (UCharacterMovementComponent* Move = Character->GetCharacterMovement())
-    {
-        SavedJumpZVelocity = Move->JumpZVelocity;
+	if (UCharacterMovementComponent* Move = Character->GetCharacterMovement())
+	{
+		SavedGravityScale = Move->GravityScale;
+		SavedJumpZVelocity = Move->JumpZVelocity;
+		SavedMaxWalkSpeed = Move->MaxWalkSpeed;
+		SavedAirControl = Move->AirControl;
 
-        const float GravityZ = Move->GetGravityZ();
-        const float GravityAcceleration = FMath::Abs(GravityZ);
-        const float InitialJumpZVelocity = FMath::Sqrt(2.f * GravityAcceleration * JumpMaxHeight);
+		const float h = FMath::Max(0.f, JumpMaxHeight);
+		const float th = FMath::Max(KINDA_SMALL_NUMBER, JumpDuration);
 
-        Move->JumpZVelocity = InitialJumpZVelocity;
-        Move->MaxWalkSpeed = JumpWalkSpeed;
-        Move->AirControl = JumpAirControl;
-    }
-    
-    Character->Jump();
+		const float RequiredGravityZ = -2.f * h / FMath::Square(th);
+		const float RequiredInitialVerticalVelocity = (2.f * h) / th;
 
-    if (JumpDuration > 0.f)
-    {
-        Character->GetWorldTimerManager().SetTimer(JumpTimerHandle, this, &ThisClass::StopJump, JumpDuration, false);
-    }
+		const float CurrentGravityZWithScale = Move->GetGravityZ();
+		const float WorldGravityZ = FMath::IsNearlyZero(SavedGravityScale) ? CurrentGravityZWithScale : CurrentGravityZWithScale / SavedGravityScale;
 
-    if (JumpAnim)
-    {
-        Character->PlayAnimMontage(JumpAnim);
-    }
+		float NewGravityScale = SavedGravityScale;
+		if (!FMath::IsNearlyZero(WorldGravityZ))
+		{
+			NewGravityScale = RequiredGravityZ / WorldGravityZ;
+		}
+
+		Move->GravityScale = NewGravityScale;
+		Move->JumpZVelocity = RequiredInitialVerticalVelocity;
+		Move->MaxWalkSpeed = JumpWalkSpeed;
+		Move->AirControl = JumpAirControl;
+	}
+
+	Character->Jump();
+
+	if (JumpAnim)
+	{
+		Character->PlayAnimMontage(JumpAnim);
+	}
 }
 
 void USmashCharacterStateJump::StateExit(ESmashCharacterStateID NextStateID)
 {
     Super::StateExit(NextStateID);
 
-    Character->GetWorldTimerManager().ClearTimer(JumpTimerHandle);
-
-    if (UCharacterMovementComponent* Move = Character->GetCharacterMovement())
-    {
-        Move->JumpZVelocity = SavedJumpZVelocity;
-    }
+	if (UCharacterMovementComponent* Move = Character->GetCharacterMovement())
+	{
+		Move->GravityScale = SavedGravityScale;
+		Move->JumpZVelocity = SavedJumpZVelocity;
+		Move->MaxWalkSpeed = SavedMaxWalkSpeed;
+		Move->AirControl = SavedAirControl;
+	}
 }
 
 void USmashCharacterStateJump::StateTick(float DeltaTime)
@@ -76,20 +87,6 @@ void USmashCharacterStateJump::StateTick(float DeltaTime)
     {
         Character->SetOrientX(Character->GetInputMoveX());
         Character->AddMovementInput(FVector::ForwardVector, Character->GetOrientX());
-    }
-}
-
-void USmashCharacterStateJump::StopJump()
-{
-    if (UCharacterMovementComponent* Move = Character->GetCharacterMovement())
-    {
-        FVector Velocity = Character->GetVelocity();
-        
-        if (Velocity.Z > 0.f)
-        {
-            Velocity.Z = 0.f;
-            Move->Velocity = Velocity;
-        }
     }
 }
 

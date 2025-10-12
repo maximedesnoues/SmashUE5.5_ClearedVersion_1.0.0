@@ -44,8 +44,8 @@ protected:
     const USmashCharacterSettings* CharacterSettings = nullptr;
 
 private:
-    FTimerHandle JumpTimerHandle;
+    float SavedGravityScale = 1.f;
     float SavedJumpZVelocity = 0.f;
-
-    void StopJump();
+    float SavedMaxWalkSpeed = 0.f;
+    float SavedAirControl = 0.f;
 };
