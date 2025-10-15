@@ -7,8 +7,10 @@
 
 #include "Engine/GameInstance.h"
 #include "Engine/LocalPlayer.h"
+#include "Engine/World.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputMappingContext.h"
+#include "Kismet/GameplayStatics.h"
 
 void ULocalMultiplayerSubsystem::CreateAndInitPlayers(ELocalMultiplayerInputMappingType MappingType)
 {
@@ -29,26 +31,19 @@ void ULocalMultiplayerSubsystem::CreateAndInitPlayers(ELocalMultiplayerInputMapp
 	while (GameInstance->GetLocalPlayers().Num() < TargetPlayers)
 	{
 		const int ControllerId = GameInstance->GetLocalPlayers().Num();
-		FString OutError;
-		GameInstance->CreateLocalPlayer(ControllerId, OutError, true);
+		UGameplayStatics::CreatePlayer(GetWorld(), ControllerId, true);
 	}
 
 	LastAssignedPlayerIndex = 0;
 	PlayerIndexFromKeyboardProfileIndex.Reset();
 	PlayerIndexFromGamepadProfileIndex.Reset();
-
-	for (int KeyboardProfileIndex = 0; KeyboardProfileIndex < LocalMultiplayerSettings->GetNbKeyboardProfiles(); ++KeyboardProfileIndex)
-	{
-		const int PlayerIndex = AssignNewPlayerToKeyboardProfileIndex(KeyboardProfileIndex);
-		AssignKeyboardInputMapping(PlayerIndex, KeyboardProfileIndex, MappingType);
-	}
 }
 
 int ULocalMultiplayerSubsystem::GetAssignedPlayerIndexFromKeyboardProfileIndex(int KeyboardProfileIndex) const
 {
-	if (const int* Found = PlayerIndexFromKeyboardProfileIndex.Find(KeyboardProfileIndex))
+	if (const int* PlayerIndex = PlayerIndexFromKeyboardProfileIndex.Find(KeyboardProfileIndex))
 	{
-		return *Found;
+		return *PlayerIndex;
 	}
 	
 	return -1;
@@ -56,9 +51,9 @@ int ULocalMultiplayerSubsystem::GetAssignedPlayerIndexFromKeyboardProfileIndex(i
 
 int ULocalMultiplayerSubsystem::GetAssignedPlayerIndexFromGamepadDeviceID(int DeviceID) const
 {
-	if (const int* Found = PlayerIndexFromGamepadProfileIndex.Find(DeviceID))
+	if (const int* PlayerIndex = PlayerIndexFromGamepadProfileIndex.Find(DeviceID))
 	{
-		return *Found;
+		return *PlayerIndex;
 	}
 
 	return -1;
@@ -66,22 +61,10 @@ int ULocalMultiplayerSubsystem::GetAssignedPlayerIndexFromGamepadDeviceID(int De
 
 int ULocalMultiplayerSubsystem::AssignNewPlayerToKeyboardProfileIndex(int KeyboardProfileIndex)
 {
-	const int FoundPlayerIndex = GetAssignedPlayerIndexFromKeyboardProfileIndex(KeyboardProfileIndex);
-	if (FoundPlayerIndex != -1)
+	const int PlayerIndex = GetAssignedPlayerIndexFromKeyboardProfileIndex(KeyboardProfileIndex);
+	if (PlayerIndex != -1)
 	{
-		return FoundPlayerIndex;
-	}
-
-	UGameInstance* GameInstance = GetGameInstance();
-	if (!GameInstance)
-	{
-		return -1;
-	}
-
-	if (LastAssignedPlayerIndex >= GameInstance->GetLocalPlayers().Num())
-	{
-		FString OutError;
-		GameInstance->CreateLocalPlayer(LastAssignedPlayerIndex, OutError, true);
+		return PlayerIndex;
 	}
 
 	const int AssignedPlayerIndex = LastAssignedPlayerIndex++;
@@ -91,22 +74,10 @@ int ULocalMultiplayerSubsystem::AssignNewPlayerToKeyboardProfileIndex(int Keyboa
 
 int ULocalMultiplayerSubsystem::AssignNewPlayerToGamepadDeviceID(int DeviceID)
 {
-	const int FoundPlayerIndex = GetAssignedPlayerIndexFromGamepadDeviceID(DeviceID);
-	if (FoundPlayerIndex != -1)
+	const int PlayerIndex = GetAssignedPlayerIndexFromGamepadDeviceID(DeviceID);
+	if (PlayerIndex != -1)
 	{
-		return FoundPlayerIndex;
-	}
-
-	UGameInstance* GameInstance = GetGameInstance();
-	if (!GameInstance)
-	{
-		return -1;
-	}
-
-	if (LastAssignedPlayerIndex >= GameInstance->GetLocalPlayers().Num())
-	{
-		FString OutError;
-		GameInstance->CreateLocalPlayer(LastAssignedPlayerIndex, OutError, true);
+		return PlayerIndex;
 	}
 
 	const int AssignedPlayerIndex = LastAssignedPlayerIndex++;
@@ -138,7 +109,8 @@ void ULocalMultiplayerSubsystem::AssignKeyboardInputMapping(int PlayerIndex, int
 	{
 		return;
 	}
-	
+
+
 	ULocalPlayer* LocalPlayer = GameInstance->GetLocalPlayerByIndex(PlayerIndex);
 	if (!LocalPlayer)
 	{
@@ -147,8 +119,15 @@ void ULocalMultiplayerSubsystem::AssignKeyboardInputMapping(int PlayerIndex, int
 
 	if (UEnhancedInputLocalPlayerSubsystem* EIS = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
 	{
-		EIS->ClearAllMappings();
-		EIS->AddMappingContext(const_cast<UInputMappingContext*>(IMC), 0);
+		if (!EIS->HasMappingContext(IMC))
+		{
+			// EIS->ClearAllMappings();
+
+			FModifyContextOptions Options;
+			Options.bForceImmediately = true;
+
+			EIS->AddMappingContext(const_cast<UInputMappingContext*>(IMC), 0, Options);
+		}
 	}
 }
 
@@ -180,8 +159,15 @@ void ULocalMultiplayerSubsystem::AssignGamepadInputMapping(int PlayerIndex, ELoc
 
 	if (UEnhancedInputLocalPlayerSubsystem* EIS = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
 	{
-		EIS->ClearAllMappings();
-		EIS->AddMappingContext(const_cast<UInputMappingContext*>(IMC), 0);
+		if (!EIS->HasMappingContext(IMC))
+		{
+			// EIS->ClearAllMappings();
+
+			FModifyContextOptions Options;
+			Options.bForceImmediately = true;
+
+			EIS->AddMappingContext(const_cast<UInputMappingContext*>(IMC), 0, Options);
+		}
 	}
 }
 
