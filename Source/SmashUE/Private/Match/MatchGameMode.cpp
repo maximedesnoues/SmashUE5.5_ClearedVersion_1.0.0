@@ -51,13 +51,7 @@ UInputMappingContext* AMatchGameMode::LoadInputMappingContextFromConfig() const
 
 void AMatchGameMode::CreateAndInitPlayers() const
 {
-    UWorld* World = GetWorld();
-    if (!World)
-    {
-        return;
-    }
-    
-    UGameInstance* GameInstance = World->GetGameInstance();
+    UGameInstance* GameInstance = GetGameInstance();
     if (!GameInstance)
     {
         return;

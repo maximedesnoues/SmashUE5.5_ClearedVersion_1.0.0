@@ -7,10 +7,8 @@
 
 #include "Engine/GameInstance.h"
 #include "Engine/LocalPlayer.h"
-#include "Engine/World.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputMappingContext.h"
-#include "Kismet/GameplayStatics.h"
 
 void ULocalMultiplayerSubsystem::CreateAndInitPlayers(ELocalMultiplayerInputMappingType MappingType)
 {
@@ -31,7 +29,8 @@ void ULocalMultiplayerSubsystem::CreateAndInitPlayers(ELocalMultiplayerInputMapp
 	while (GameInstance->GetLocalPlayers().Num() < TargetPlayers)
 	{
 		const int ControllerId = GameInstance->GetLocalPlayers().Num();
-		UGameplayStatics::CreatePlayer(GetWorld(), ControllerId, true);
+		FString OutError;
+		GameInstance->CreateLocalPlayer(ControllerId, OutError, true);
 	}
 
 	LastAssignedPlayerIndex = 0;
@@ -121,8 +120,6 @@ void ULocalMultiplayerSubsystem::AssignKeyboardInputMapping(int PlayerIndex, int
 	{
 		if (!EIS->HasMappingContext(IMC))
 		{
-			// EIS->ClearAllMappings();
-
 			FModifyContextOptions Options;
 			Options.bForceImmediately = true;
 
@@ -161,8 +158,6 @@ void ULocalMultiplayerSubsystem::AssignGamepadInputMapping(int PlayerIndex, ELoc
 	{
 		if (!EIS->HasMappingContext(IMC))
 		{
-			// EIS->ClearAllMappings();
-
 			FModifyContextOptions Options;
 			Options.bForceImmediately = true;
 
