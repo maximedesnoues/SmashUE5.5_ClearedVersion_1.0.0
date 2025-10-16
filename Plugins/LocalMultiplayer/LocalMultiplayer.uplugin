@@ -5,9 +5,12 @@
 	"FriendlyName": "Local Multiplayer",
 	"Description": "Local multiplayer input routing for keyboard and multiple gamepads using Enhanced Input.",
 	"Category": "Input",
-	"CreatedBy": "Maxime",
+	"CreatedBy": "Maxime Desnoues",
 	"CreatedByURL": "https://maximedesnoues.alwaysdata.net/",
+	"EnabledByDefault": false,
 	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"Installed": false,
 	"Modules": [
 		{
 			"Name": "LocalMultiplayer",
