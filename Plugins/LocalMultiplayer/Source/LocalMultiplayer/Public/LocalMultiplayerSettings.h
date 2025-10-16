@@ -26,14 +26,14 @@ struct FLocalMultiplayerProfileData
     GENERATED_BODY()
 
 public:
-    UPROPERTY(EditAnywhere)
-    FName ProfileName;
-    
-    UPROPERTY(EditAnywhere, meta=(DisplayName="IMC Menu"))
-    TObjectPtr<UInputMappingContext> IMCMenu = nullptr;
+	UPROPERTY(EditAnywhere, Category="Local Multiplayer|Profiles")
+	FName ProfileName;
 
-    UPROPERTY(EditAnywhere, meta=(DisplayName="IMC In Game"))
-    TObjectPtr<UInputMappingContext> IMCInGame = nullptr;
+	UPROPERTY(EditAnywhere, Category="Local Multiplayer|Profiles", meta=(DisplayName="IMC Menu"))
+	TObjectPtr<UInputMappingContext> IMCMenu = nullptr;
+
+	UPROPERTY(EditAnywhere, Category="Local Multiplayer|Profiles", meta=(DisplayName="IMC In Game"))
+	TObjectPtr<UInputMappingContext> IMCInGame = nullptr;
 
     UInputMappingContext* GetIMCFromType(ELocalMultiplayerInputMappingType MappingType) const;
     bool ContainsKey(const FKey& Key, ELocalMultiplayerInputMappingType MappingType) const;

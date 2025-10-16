@@ -1,10 +1,12 @@
 {
 	"FileVersion": 3,
 	"Version": 1,
-	"VersionName": "1.0.0",
-	"FriendlyName": "LocalMultiplayer",
-	"Description": "",
-	"Category": "Other",
+	"VersionName": "1.0",
+	"FriendlyName": "Local Multiplayer",
+	"Description": "Local multiplayer input routing for keyboard and multiple gamepads using Enhanced Input.",
+	"Category": "Input",
+	"CreatedBy": "Maxime",
+	"CreatedByURL": "https://maximedesnoues.alwaysdata.net/",
 	"CanContainContent": true,
 	"Modules": [
 		{

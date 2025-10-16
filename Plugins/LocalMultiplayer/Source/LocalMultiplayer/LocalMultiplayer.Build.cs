@@ -7,7 +7,9 @@ public class LocalMultiplayer : ModuleRules
 	public LocalMultiplayer(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
-			
+
+		PrecompileForTargets = PrecompileTargetsType.Any;
+		
 		PublicDependencyModuleNames.AddRange(new string[]
 		{
 			"Core",
