@@ -34,8 +34,6 @@ void ULocalMultiplayerSubsystem::CreateAndInitPlayers(ELocalMultiplayerInputMapp
 	}
 
 	LastAssignedPlayerIndex = 0;
-	PlayerIndexFromKeyboardProfileIndex.Reset();
-	PlayerIndexFromGamepadProfileIndex.Reset();
 }
 
 int ULocalMultiplayerSubsystem::GetAssignedPlayerIndexFromKeyboardProfileIndex(int KeyboardProfileIndex) const
@@ -68,6 +66,16 @@ int ULocalMultiplayerSubsystem::AssignNewPlayerToKeyboardProfileIndex(int Keyboa
 
 	const int AssignedPlayerIndex = LastAssignedPlayerIndex++;
 	PlayerIndexFromKeyboardProfileIndex.Add(KeyboardProfileIndex, AssignedPlayerIndex);
+
+	if (UGameInstance* GameInstance = GetGameInstance())
+	{
+		if (!GameInstance->GetLocalPlayerByIndex(AssignedPlayerIndex))
+		{
+			FString OutError;
+			GameInstance->CreateLocalPlayer(AssignedPlayerIndex, OutError, true);
+		}
+	}
+	
 	return AssignedPlayerIndex;
 }
 
@@ -81,6 +89,16 @@ int ULocalMultiplayerSubsystem::AssignNewPlayerToGamepadDeviceID(int DeviceID)
 
 	const int AssignedPlayerIndex = LastAssignedPlayerIndex++;
 	PlayerIndexFromGamepadProfileIndex.Add(DeviceID, AssignedPlayerIndex);
+
+	if (UGameInstance* GameInstance = GetGameInstance())
+	{
+		if (!GameInstance->GetLocalPlayerByIndex(AssignedPlayerIndex))
+		{
+			FString OutError;
+			GameInstance->CreateLocalPlayer(AssignedPlayerIndex, OutError, true);
+		}
+	}
+	
 	return AssignedPlayerIndex;
 }
 
