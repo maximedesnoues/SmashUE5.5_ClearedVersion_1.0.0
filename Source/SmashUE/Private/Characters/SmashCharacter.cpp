@@ -3,11 +3,13 @@
 
 #include "Characters/SmashCharacter.h"
 
+#include "Camera/CameraWorldSubsystem.h"
 #include "Characters/SmashCharacterInputData.h"
 #include "Characters/SmashCharacterStateMachine.h"
 
 #include "Components/SkeletalMeshComponent.h"
 #include "Engine/LocalPlayer.h"
+#include "Engine/World.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "GameFramework/PlayerController.h"
@@ -29,6 +31,14 @@ void ASmashCharacter::BeginPlay()
 	
 	CreateStateMachine();
 	InitStateMachine();
+
+	if (UWorld* World = GetWorld())
+	{
+		if (UCameraWorldSubsystem* CameraWorldSubsystem = World->GetSubsystem<UCameraWorldSubsystem>())
+		{
+			CameraWorldSubsystem->AddFollowTarget(this);
+		}
+	}
 }
 
 // Called every frame
