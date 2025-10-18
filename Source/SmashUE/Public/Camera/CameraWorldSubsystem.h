@@ -6,8 +6,8 @@
 #include "Subsystems/WorldSubsystem.h"
 #include "CameraWorldSubsystem.generated.h"
 
-class AActor;
 class UCameraComponent;
+class UObject;
 class UWorld;
 
 struct TStatId;
@@ -24,8 +24,8 @@ public:
 	virtual void PostInitialize() override;
 	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
 
-	void AddFollowTarget(AActor* FollowTarget);
-	void RemoveFollowTarget(AActor* FollowTarget);
+	void AddFollowTarget(UObject* FollowTarget);
+	void RemoveFollowTarget(UObject* FollowTarget);
 
 	virtual void Tick(float DeltaTime) override;
 	virtual TStatId GetStatId() const override;
@@ -35,7 +35,7 @@ protected:
 	TObjectPtr<UCameraComponent> CameraMain = nullptr;
 
 	UPROPERTY()
-	TArray<AActor*> FollowTargets;
+	TArray<UObject*> FollowTargets;
 
 	UCameraComponent* FindCameraByTag(const FName& Tag) const;
 

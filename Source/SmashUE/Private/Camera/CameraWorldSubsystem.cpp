@@ -3,6 +3,8 @@
 
 #include "Camera/CameraWorldSubsystem.h"
 
+#include "Camera/CameraFollowTarget.h"
+
 #include "Camera/CameraComponent.h"
 #include "Components/ActorComponent.h"
 #include "EngineUtils.h"
@@ -21,7 +23,7 @@ void UCameraWorldSubsystem::OnWorldBeginPlay(UWorld& InWorld)
 	CameraMain = FindCameraByTag(TEXT("CameraMain"));
 }
 
-void UCameraWorldSubsystem::AddFollowTarget(AActor* FollowTarget)
+void UCameraWorldSubsystem::AddFollowTarget(UObject* FollowTarget)
 {
 	if (!FollowTarget)
 	{
@@ -31,7 +33,7 @@ void UCameraWorldSubsystem::AddFollowTarget(AActor* FollowTarget)
 	FollowTargets.AddUnique(FollowTarget);
 }
 
-void UCameraWorldSubsystem::RemoveFollowTarget(AActor* FollowTarget)
+void UCameraWorldSubsystem::RemoveFollowTarget(UObject* FollowTarget)
 {
 	if (!FollowTarget)
 	{
@@ -91,12 +93,20 @@ FVector UCameraWorldSubsystem::CalculateAveragePositionBetweenTargets() const
 	FVector SumOfPositions = FVector::ZeroVector;
 	int TargetCount = 0;
 
-	for (AActor* FollowTarget : FollowTargets)
+	for (UObject* Object : FollowTargets)
 	{
-		if (IsValid(FollowTarget))
+		if (!IsValid(Object))
 		{
-			SumOfPositions += FollowTarget->GetActorLocation();
-			++TargetCount;
+			continue;
+		}
+
+		if (ICameraFollowTarget* CameraFollowTarget = Cast<ICameraFollowTarget>(Object))
+		{
+			if (CameraFollowTarget->IsFollowable())
+			{
+				SumOfPositions += CameraFollowTarget->GetFollowPosition();
+				++TargetCount;
+			}
 		}
 	}
 

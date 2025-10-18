@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Camera/CameraFollowTarget.h"
 #include "InputMappingContext.h"
 #include "SmashCharacter.generated.h"
 
@@ -19,7 +20,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FInputJumpEvent);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInputFallFastEvent, float, InputFallFast);
 
 UCLASS()
-class SMASHUE_API ASmashCharacter : public ACharacter
+class SMASHUE_API ASmashCharacter : public ACharacter, public ICameraFollowTarget
 {
 	GENERATED_BODY()
 
@@ -134,6 +135,14 @@ protected:
 private:
 	void BindInputFallFastAction(UEnhancedInputComponent* EnhancedInputComponent);
 	void OnInputFallFast(const FInputActionValue& InputActionValue);
+
+#pragma endregion
+
+#pragma region Camera Target
+
+public:
+	virtual bool IsFollowable() override;
+	virtual FVector GetFollowPosition() override;
 
 #pragma endregion
 };

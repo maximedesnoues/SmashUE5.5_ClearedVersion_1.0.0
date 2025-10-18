@@ -225,3 +225,13 @@ void ASmashCharacter::OnInputFallFast(const FInputActionValue& InputActionValue)
 	InputFallFastEvent.Broadcast(InputFallFast);
 }
 
+bool ASmashCharacter::IsFollowable()
+{
+	return true;
+}
+
+FVector ASmashCharacter::GetFollowPosition()
+{
+	return GetActorLocation();
+}
+
