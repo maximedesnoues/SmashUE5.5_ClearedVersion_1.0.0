@@ -124,7 +124,9 @@ void UCameraWorldSubsystem::TickUpdateCameraPosition(float DeltaTime)
 	}
 
 	const FVector DesiredCameraPosition = AverageTargetPosition + InitialOffset;
-	const FVector NewCameraPosition = FMath::VInterpTo(CurrentCameraPosition, DesiredCameraPosition, DeltaTime, 3.f);
+	FVector NewCameraPosition = FMath::VInterpTo(CurrentCameraPosition, DesiredCameraPosition, DeltaTime, 3.f);
+
+	ClampPositionIntoCameraBounds(NewCameraPosition);
 
 	CameraMain->SetWorldLocation(NewCameraPosition);
 }
@@ -251,7 +253,27 @@ void UCameraWorldSubsystem::ClampPositionIntoCameraBounds(FVector& Position)
 	const FVector WorldBoundsMin = CalculateWorldPositionFromViewportPosition(ViewportBoundsMin);
 	const FVector WorldBoundsMax = CalculateWorldPositionFromViewportPosition(ViewportBoundsMax);
 
-	Position.X = FMath::Clamp(Position.X, FMath::Min(WorldBoundsMin.X, WorldBoundsMax.X), FMath::Max(WorldBoundsMin.X, WorldBoundsMax.X));
-	Position.Z = FMath::Clamp(Position.Z, FMath::Min(WorldBoundsMin.Z, WorldBoundsMax.Z), FMath::Max(WorldBoundsMin.Z, WorldBoundsMax.Z));
+	const float ViewportWidth = FMath::Abs(WorldBoundsMax.X - WorldBoundsMin.X);
+	const float ViewportHeight = FMath::Abs(WorldBoundsMax.Z - WorldBoundsMin.Z);
+
+	if (ViewportWidth < KINDA_SMALL_NUMBER || ViewportHeight < KINDA_SMALL_NUMBER)
+	{
+		return;
+	}
+
+	const float HalfViewportWidth = ViewportWidth * 0.5f;
+	const float HalfViewportHeight = ViewportHeight * 0.5f;
+
+	const float AllowedCameraMinX = CameraBoundsMin.X + HalfViewportWidth;
+	const float AllowedCameraMaxX = CameraBoundsMax.X - HalfViewportWidth;
+
+	const float AllowedCameraMinZ = CameraBoundsMin.Y + HalfViewportHeight;
+	const float AllowedCameraMaxZ = CameraBoundsMax.Y - HalfViewportHeight;
+
+	if (AllowedCameraMinX < AllowedCameraMaxX && AllowedCameraMinZ < AllowedCameraMaxZ)
+	{
+		Position.X = FMath::Clamp(Position.X, AllowedCameraMinX, AllowedCameraMaxX);
+		Position.Z = FMath::Clamp(Position.Z, AllowedCameraMinZ, AllowedCameraMaxZ);
+	}
 }
 
