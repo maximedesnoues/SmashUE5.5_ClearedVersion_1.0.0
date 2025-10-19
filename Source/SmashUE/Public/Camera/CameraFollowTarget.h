@@ -20,6 +20,6 @@ class SMASHUE_API ICameraFollowTarget
 	GENERATED_BODY()
 
 public:
-	virtual bool IsFollowable() = 0;
-	virtual FVector GetFollowPosition() = 0;
+	virtual bool IsFollowable() const = 0;
+	virtual FVector GetFollowPosition() const = 0;
 };

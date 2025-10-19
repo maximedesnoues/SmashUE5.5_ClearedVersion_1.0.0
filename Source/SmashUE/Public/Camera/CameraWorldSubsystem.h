@@ -35,9 +35,8 @@ protected:
 
 	UCameraComponent* FindCameraByTag(const FName& Tag) const;
 
-	FVector CalculateAveragePositionBetweenTargets() const;
-
 	void TickUpdateCameraPosition(float DeltaTime);
+	void TickUpdateCameraZoom(float DeltaTime);
 
 #pragma endregion
 
@@ -50,6 +49,9 @@ public:
 protected:
 	UPROPERTY()
 	TArray<UObject*> FollowTargets;
+
+	FVector CalculateAveragePositionBetweenTargets() const;
+	float CalculateGreatestDistanceBetweenTargets() const;
 
 #pragma endregion
 
@@ -65,13 +67,36 @@ protected:
 	UPROPERTY()
 	float CameraBoundsYProjectionCenter = 0.f;
 
-	AActor* FindCameraBoundsActor();
+	AActor* FindCameraBoundsActor() const;
 	void InitCameraBounds(AActor* CameraBoundsActor);
 
-	void GetViewportBounds(FVector2D& OutViewportBoundsMin, FVector2D& OutViewportBoundsMax);
-	FVector CalculateWorldPositionFromViewportPosition(const FVector2D& ViewportPosition);
+	void GetViewportBounds(FVector2D& OutViewportBoundsMin, FVector2D& OutViewportBoundsMax) const;
+	FVector CalculateWorldPositionFromViewportPosition(const FVector2D& ViewportPosition) const;
 
 	void ClampPositionIntoCameraBounds(FVector& Position);
+
+#pragma endregion
+
+#pragma region Zoom
+
+protected:
+	UPROPERTY()
+	float CameraZoomYMin = 0.f;
+
+	UPROPERTY()
+	float CameraZoomYMax = 0.f;
+
+	UPROPERTY()
+	float CameraZoomDistanceBetweenTargetsMin = 300.f;
+
+	UPROPERTY()
+	float CameraZoomDistanceBetweenTargetsMax = 1500.f;
+
+	UFUNCTION()
+	void InitCameraZoomParameters();
+
+	AActor* FindCameraDistanceMinActor() const;
+	AActor* FindCameraDistanceMaxActor() const;
 
 #pragma endregion
 };

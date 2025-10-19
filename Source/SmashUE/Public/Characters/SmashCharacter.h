@@ -141,8 +141,8 @@ private:
 #pragma region Camera Target
 
 public:
-	virtual bool IsFollowable() override;
-	virtual FVector GetFollowPosition() override;
+	virtual bool IsFollowable() const override;
+	virtual FVector GetFollowPosition() const override;
 
 #pragma endregion
 };
