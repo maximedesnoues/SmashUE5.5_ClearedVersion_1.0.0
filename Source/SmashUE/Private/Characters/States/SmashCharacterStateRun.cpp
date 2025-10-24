@@ -1,12 +1,12 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Characters/States/SmashCharacterStateRun.h"
+
+#include "Characters/SmashCharacterStateID.h"
+#include "Characters/SmashCharacterStateMachine.h"
 
 #include "Characters/SmashCharacter.h"
 #include "Characters/SmashCharacterSettings.h"
-#include "Characters/SmashCharacterStateID.h"
-#include "Characters/SmashCharacterStateMachine.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -21,28 +21,16 @@ void USmashCharacterStateRun::StateEnter(ESmashCharacterStateID PreviousStateID)
 
 	CharacterSettings = GetDefault<USmashCharacterSettings>();
 	
-	Character->InputJumpEvent.AddDynamic(this, &USmashCharacterStateRun::OnInputJump);
-
 	if (UCharacterMovementComponent* Move = Character->GetCharacterMovement())
 	{
 		Move->MaxWalkSpeed = RunMoveSpeedMax;
 	}
 
+	Character->InputJumpEvent.AddDynamic(this, &USmashCharacterStateRun::OnInputJump);
+
 	if (RunAnim)
 	{
 		Character->PlayAnimMontage(RunAnim);
-	}
-}
-
-void USmashCharacterStateRun::StateExit(ESmashCharacterStateID NextStateID)
-{
-	Super::StateExit(NextStateID);
-	
-	Character->InputJumpEvent.RemoveDynamic(this, &USmashCharacterStateRun::OnInputJump);
-
-	if (UCharacterMovementComponent* Move = Character->GetCharacterMovement())
-	{
-		Move->StopMovementImmediately();
 	}
 }
 
@@ -71,13 +59,23 @@ void USmashCharacterStateRun::StateTick(float DeltaTime)
 	}
 }
 
-void USmashCharacterStateRun::OnInputJump()
-{	
-	if (!Character->CanJump())
-	{
-		return;
-	}
+void USmashCharacterStateRun::StateExit(ESmashCharacterStateID NextStateID)
+{
+	Super::StateExit(NextStateID);
 
-	StateMachine->ChangeState(ESmashCharacterStateID::Jump);
+	Character->InputJumpEvent.RemoveDynamic(this, &USmashCharacterStateRun::OnInputJump);
+
+	if (UCharacterMovementComponent* Move = Character->GetCharacterMovement())
+	{
+		Move->StopMovementImmediately();
+	}
 }
 
+void USmashCharacterStateRun::OnInputJump()
+{	
+	if (Character->CanJump())
+	{
+		StateMachine->ChangeState(ESmashCharacterStateID::Jump);
+		return;
+	}
+}

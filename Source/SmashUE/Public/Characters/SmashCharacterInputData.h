@@ -8,9 +8,6 @@
 
 class UInputAction;
 
-/**
- * 
- */
 UCLASS()
 class SMASHUE_API USmashCharacterInputData : public UDataAsset
 {

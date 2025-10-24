@@ -8,7 +8,7 @@
 UENUM(BlueprintType)
 enum class ESmashCharacterStateID : uint8
 {
-	None = 0,
+	None,
 	Idle,
 	Walk,
 	Run,

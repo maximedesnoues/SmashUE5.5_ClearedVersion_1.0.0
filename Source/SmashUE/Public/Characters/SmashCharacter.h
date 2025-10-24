@@ -13,8 +13,6 @@ class USmashCharacterStateMachine;
 
 class UEnhancedInputComponent;
 
-struct FInputActionValue;
-
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInputMoveXFastEvent, float, InputMoveXFast);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FInputJumpEvent);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInputFallFastEvent, float, InputFallFast);

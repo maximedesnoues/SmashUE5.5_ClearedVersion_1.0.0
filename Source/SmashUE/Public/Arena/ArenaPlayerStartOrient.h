@@ -3,10 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ArenaPlayerStartOrient.generated.h"
 
 UENUM()
 enum class EArenaPlayerStartOrient : uint8
 {
 	Left,
-	Right,
+	Right
 };

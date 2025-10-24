@@ -1,40 +1,26 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Characters/SmashCharacterStateMachine.h"
 
-#include "Characters/SmashCharacter.h"
-#include "Characters/SmashCharacterState.h"
 #include "Characters/SmashCharacterStateID.h"
+#include "Characters/SmashCharacterState.h"
+#include "Characters/SmashCharacter.h"
 
 void USmashCharacterStateMachine::Init(ASmashCharacter* InCharacter)
 {
     Character = InCharacter;
+    
     FindStates();
     InitStates();
+    
     ChangeState(ESmashCharacterStateID::Idle);
 }
 
-void USmashCharacterStateMachine::FindStates()
+void USmashCharacterStateMachine::Tick(float DeltaTime)
 {
-    TArray<UActorComponent*> FoundComponents = Character->K2_GetComponentsByClass(USmashCharacterState::StaticClass());
-    for (UActorComponent* StateComponent : FoundComponents)
+    if (CurrentState)
     {
-        if (USmashCharacterState* State = Cast<USmashCharacterState>(StateComponent))
-        {
-            if (State->GetStateID() != ESmashCharacterStateID::None)
-            {
-                AllStates.Add(State);
-            }
-        }
-    }
-}
-
-void USmashCharacterStateMachine::InitStates()
-{
-    for (USmashCharacterState* State : AllStates)
-    {
-        State->StateInit(this);
+        CurrentState->StateTick(DeltaTime);
     }
 }
 
@@ -76,13 +62,25 @@ void USmashCharacterStateMachine::ChangeState(ESmashCharacterStateID NextStateID
     }
 }
 
-void USmashCharacterStateMachine::Tick(float DeltaTime)
+void USmashCharacterStateMachine::FindStates()
 {
-    if (!CurrentState)
+    TArray<UActorComponent*> FoundComponents = Character->K2_GetComponentsByClass(USmashCharacterState::StaticClass());
+    for (UActorComponent* StateComponent : FoundComponents)
     {
-        return;
+        if (USmashCharacterState* State = Cast<USmashCharacterState>(StateComponent))
+        {
+            if (State->GetStateID() != ESmashCharacterStateID::None)
+            {
+                AllStates.Add(State);
+            }
+        }
     }
-
-    CurrentState->StateTick(DeltaTime);
 }
 
+void USmashCharacterStateMachine::InitStates()
+{
+    for (USmashCharacterState* State : AllStates)
+    {
+        State->StateInit(this);
+    }
+}

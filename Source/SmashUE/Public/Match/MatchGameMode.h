@@ -7,14 +7,12 @@
 #include "MatchGameMode.generated.h"
 
 class AArenaPlayerStart;
+
 class ASmashCharacter;
 class USmashCharacterInputData;
 
 class UInputMappingContext;
 
-/**
- *
- */
 UCLASS()
 class SMASHUE_API AMatchGameMode : public AGameModeBase
 {
@@ -28,13 +26,13 @@ protected:
 	TArray<ASmashCharacter*> CharactersInsideArena;
 
 private:
-	USmashCharacterInputData* LoadInputDataFromConfig() const;
-	UInputMappingContext* LoadInputMappingContextFromConfig() const;
-
 	void CreateAndInitPlayers() const;
 
 	void FindPlayerStartActorsInArena(TArray<AArenaPlayerStart*>& ResultsActors) const;
 	void SpawnCharacters(const TArray<AArenaPlayerStart*>& SpawnPoints);
+
+	USmashCharacterInputData* LoadInputDataFromConfig() const;
+	UInputMappingContext* LoadInputMappingContextFromConfig() const;
 
 	TSubclassOf<ASmashCharacter> GetSmashCharacterClassFromInputType(EAutoReceiveInput::Type InputType) const;
 };

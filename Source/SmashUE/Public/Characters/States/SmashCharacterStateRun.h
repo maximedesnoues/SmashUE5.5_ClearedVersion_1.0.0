@@ -8,11 +8,6 @@
 
 class USmashCharacterSettings;
 
-class UAnimMontage;
-
-/**
- *
- */
 UCLASS(ClassGroup=(SmashCharacterState), meta=(BlueprintSpawnableComponent))
 class SMASHUE_API USmashCharacterStateRun : public USmashCharacterState
 {
@@ -20,9 +15,10 @@ class SMASHUE_API USmashCharacterStateRun : public USmashCharacterState
 
 public:
 	virtual ESmashCharacterStateID GetStateID() const override;
+	
 	virtual void StateEnter(ESmashCharacterStateID PreviousStateID) override;
-	virtual void StateExit(ESmashCharacterStateID NextStateID) override;
 	virtual void StateTick(float DeltaTime) override;
+	virtual void StateExit(ESmashCharacterStateID NextStateID) override;
 
 	UFUNCTION()
 	void OnInputJump();

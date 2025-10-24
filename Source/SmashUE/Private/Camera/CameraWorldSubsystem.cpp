@@ -109,7 +109,6 @@ void UCameraWorldSubsystem::TickUpdateCameraPosition(float DeltaTime)
 	static bool bOffsetInitialized = false;
 	static FVector InitialOffset = FVector::ZeroVector;
 
-	const FVector CurrentCameraPosition = CameraOwner->GetActorLocation();
 	const FVector AverageTargetPosition = CalculateAveragePositionBetweenTargets();
 
 	if (!bOffsetInitialized)
@@ -118,6 +117,8 @@ void UCameraWorldSubsystem::TickUpdateCameraPosition(float DeltaTime)
 		InitialOffset = FVector(InitialComponentOffset.X, 0.f, InitialComponentOffset.Z);
 		bOffsetInitialized = true;
 	}
+
+	const FVector CurrentCameraPosition = CameraOwner->GetActorLocation();
 
 	FVector DesiredCameraPosition = CurrentCameraPosition;
 	DesiredCameraPosition.X = AverageTargetPosition.X + InitialOffset.X;
@@ -158,9 +159,9 @@ void UCameraWorldSubsystem::TickUpdateCameraZoom(float DeltaTime)
 
 	if (AActor* CameraOwner = CameraMain->GetOwner())
 	{
-		const float TargetOwnerY = FMath::Lerp(CameraZoomYMin, CameraZoomYMax, CurrentDistancePercent);
-
 		FVector CameraOwnerLocation = CameraOwner->GetActorLocation();
+
+		const float TargetOwnerY = FMath::Lerp(CameraZoomYMin, CameraZoomYMax, CurrentDistancePercent);
 
 		const float Alpha = 1.f - FMath::Exp(-CameraSettings->SizeDampingFactor * DeltaTime);
 		CameraOwnerLocation.Y = FMath::Lerp(CameraOwnerLocation.Y, TargetOwnerY, Alpha);

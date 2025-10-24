@@ -1,12 +1,12 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Characters/States/SmashCharacterStateIdle.h"
+
+#include "Characters/SmashCharacterStateID.h"
+#include "Characters/SmashCharacterStateMachine.h"
 
 #include "Characters/SmashCharacter.h"
 #include "Characters/SmashCharacterSettings.h"
-#include "Characters/SmashCharacterStateID.h"
-#include "Characters/SmashCharacterStateMachine.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -30,14 +30,6 @@ void USmashCharacterStateIdle::StateEnter(ESmashCharacterStateID PreviousStateID
 	}
 }
 
-void USmashCharacterStateIdle::StateExit(ESmashCharacterStateID NextStateID)
-{
-	Super::StateExit(NextStateID);
-	
-	Character->InputMoveXFastEvent.RemoveDynamic(this, &USmashCharacterStateIdle::OnInputMoveXFast);
-	Character->InputJumpEvent.RemoveDynamic(this, &USmashCharacterStateIdle::OnInputJump);
-}
-
 void USmashCharacterStateIdle::StateTick(float DeltaTime)
 {
 	Super::StateTick(DeltaTime);
@@ -58,18 +50,25 @@ void USmashCharacterStateIdle::StateTick(float DeltaTime)
 	}
 }
 
+void USmashCharacterStateIdle::StateExit(ESmashCharacterStateID NextStateID)
+{
+	Super::StateExit(NextStateID);
+
+	Character->InputMoveXFastEvent.RemoveDynamic(this, &USmashCharacterStateIdle::OnInputMoveXFast);
+	Character->InputJumpEvent.RemoveDynamic(this, &USmashCharacterStateIdle::OnInputJump);
+}
+
 void USmashCharacterStateIdle::OnInputMoveXFast(float InputMoveXFast)
 {
 	StateMachine->ChangeState(ESmashCharacterStateID::Run);
+	return;
 }
 
 void USmashCharacterStateIdle::OnInputJump()
 {
-	if (!Character->CanJump())
+	if (Character->CanJump())
 	{
+		StateMachine->ChangeState(ESmashCharacterStateID::Jump);
 		return;
 	}
-
-	StateMachine->ChangeState(ESmashCharacterStateID::Jump);
 }
-

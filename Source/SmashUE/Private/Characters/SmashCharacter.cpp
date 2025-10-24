@@ -1,26 +1,19 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Characters/SmashCharacter.h"
 
-#include "Camera/CameraWorldSubsystem.h"
 #include "Characters/SmashCharacterInputData.h"
 #include "Characters/SmashCharacterStateMachine.h"
 
-#include "Components/SkeletalMeshComponent.h"
-#include "Engine/LocalPlayer.h"
-#include "Engine/World.h"
+#include "Camera/CameraWorldSubsystem.h"
+
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "GameFramework/PlayerController.h"
-#include "InputAction.h"
-#include "InputActionValue.h"
-#include "InputMappingContext.h"
 
 // Sets default values
 ASmashCharacter::ASmashCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+ 	// Set this character to call Tick() every frame. You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 }
 
@@ -77,11 +70,6 @@ void ASmashCharacter::SetOrientX(float NewOrientX)
 
 void ASmashCharacter::RotateMeshUsingOrientX() const
 {
-	if (!GetMesh())
-	{
-		return;
-	}
-
 	FRotator Rotation = GetMesh()->GetRelativeRotation();
 	Rotation.Yaw = -90.f * OrientX;
 	GetMesh()->SetRelativeRotation(Rotation);
@@ -97,22 +85,18 @@ void ASmashCharacter::CreateStateMachine()
 
 void ASmashCharacter::InitStateMachine()
 {
-	if (!StateMachine)
+	if (StateMachine)
 	{
-		return;
+		StateMachine->Init(this);
 	}
-	
-	StateMachine->Init(this);
 }
 
 void ASmashCharacter::TickStateMachine(float DeltaTime) const
 {
-	if (!StateMachine)
+	if (StateMachine)
 	{
-		return;
+		StateMachine->Tick(DeltaTime);
 	}
-	
-	StateMachine->Tick(DeltaTime);
 }
 
 void ASmashCharacter::SetInputData(USmashCharacterInputData* InInputData)
@@ -133,18 +117,15 @@ void ASmashCharacter::SetupMappingContextIntoController() const
 		return;
 	}
 
-	const ULocalPlayer* Player = PlayerController->GetLocalPlayer();
-	if (!Player)
+	const ULocalPlayer* LocalPlayer = PlayerController->GetLocalPlayer();
+	if (!LocalPlayer)
 	{
 		return;
 	}
 
-	if (UEnhancedInputLocalPlayerSubsystem* InputSystem = Player->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
+	if (UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
 	{
-		if (InputMappingContext)
-		{
-			InputSystem->AddMappingContext(InputMappingContext, 0);
-		}
+		EnhancedInputLocalPlayerSubsystem->AddMappingContext(InputMappingContext, 0);
 	}
 }
 
@@ -160,11 +141,6 @@ float ASmashCharacter::GetInputMoveXFast() const
 
 void ASmashCharacter::BindInputMoveXActions(UEnhancedInputComponent* EnhancedInputComponent)
 {
-	if (!InputData)
-	{
-		return;
-	}
-
 	if (InputData->InputActionMoveX)
 	{
 		EnhancedInputComponent->BindAction(InputData->InputActionMoveX, ETriggerEvent::Triggered, this, &ASmashCharacter::OnInputMoveX);
@@ -190,11 +166,6 @@ void ASmashCharacter::OnInputMoveXFast(const FInputActionValue& InputActionValue
 
 void ASmashCharacter::BindInputJumpAction(UEnhancedInputComponent* EnhancedInputComponent)
 {
-	if (!InputData)
-	{
-		return;
-	}
-
 	if (InputData->InputActionJump)
 	{
 		EnhancedInputComponent->BindAction(InputData->InputActionJump, ETriggerEvent::Started, this, &ASmashCharacter::OnInputJump);
@@ -208,11 +179,6 @@ void ASmashCharacter::OnInputJump(const FInputActionValue& InputActionValue)
 
 void ASmashCharacter::BindInputFallFastAction(UEnhancedInputComponent* EnhancedInputComponent)
 {
-	if (!InputData)
-	{
-		return;
-	}
-
 	if (InputData->InputActionFallFast)
 	{
 		EnhancedInputComponent->BindAction(InputData->InputActionFallFast, ETriggerEvent::Triggered, this, &ASmashCharacter::OnInputFallFast);
@@ -234,4 +200,3 @@ FVector ASmashCharacter::GetFollowPosition() const
 {
 	return GetActorLocation();
 }
-

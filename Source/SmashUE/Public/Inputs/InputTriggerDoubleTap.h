@@ -6,9 +6,6 @@
 #include "InputTriggers.h"
 #include "InputTriggerDoubleTap.generated.h"
 
-/**
- * 
- */
 UCLASS(NotBlueprintable, meta=(DisplayName="Double Tap", NotInputConfigurable="true"))
 class SMASHUE_API UInputTriggerDoubleTap : public UInputTrigger
 {

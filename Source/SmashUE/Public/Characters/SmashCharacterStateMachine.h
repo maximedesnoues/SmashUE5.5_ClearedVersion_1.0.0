@@ -4,15 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "SmashCharacterStateID.h"
 #include "SmashCharacterStateMachine.generated.h"
 
-class ASmashCharacter;
-class USmashCharacterState;
+enum class ESmashCharacterStateID : uint8;
 
-/**
- * 
- */
+class USmashCharacterState;
+class ASmashCharacter;
+
 UCLASS()
 class SMASHUE_API USmashCharacterStateMachine : public UObject
 {
@@ -23,7 +21,6 @@ public:
 	void Tick(float DeltaTime);
 
 	ASmashCharacter* GetCharacter() const;
-
 	USmashCharacterState* GetState(ESmashCharacterStateID StateID) const;
 
 	UFUNCTION(BlueprintCallable)
@@ -33,14 +30,14 @@ protected:
 	UPROPERTY()
 	TObjectPtr<ASmashCharacter> Character = nullptr;
 
-	UPROPERTY()
-	TArray<USmashCharacterState*> AllStates;
-
 	UPROPERTY(BlueprintReadOnly)
 	ESmashCharacterStateID CurrentStateID;
 
 	UPROPERTY()
 	TObjectPtr<USmashCharacterState> CurrentState = nullptr;
+
+	UPROPERTY()
+	TArray<USmashCharacterState*> AllStates;
 
 	void FindStates();
 	void InitStates();

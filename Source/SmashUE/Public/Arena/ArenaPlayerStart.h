@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ArenaPlayerStartOrient.h"
 #include "GameFramework/PlayerStart.h"
+#include "ArenaPlayerStartOrient.h"
 #include "ArenaPlayerStart.generated.h"
 
 UCLASS()
@@ -13,9 +13,9 @@ class SMASHUE_API AArenaPlayerStart : public APlayerStart
 	GENERATED_BODY()
 
 public:
-	UFUNCTION()
-	float GetStartOrientX() const;
-
 	UPROPERTY(EditAnywhere)
 	EArenaPlayerStartOrient StartOrient = EArenaPlayerStartOrient::Right;
+
+	UFUNCTION()
+	float GetStartOrientX() const;
 };

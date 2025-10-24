@@ -8,9 +8,6 @@
 
 class ASmashCharacter;
 
-/**
- * 
- */
 UCLASS(Config=Game, DefaultConfig, meta=(DisplayName="Smash Arena Settings"))
 class SMASHUE_API UArenaSettings : public UDeveloperSettings
 {
@@ -28,5 +25,4 @@ public:
 
 	UPROPERTY(Config, EditAnywhere, Category="Characters")
 	TSubclassOf<ASmashCharacter> SmashCharacterClassP3;
-	
 };

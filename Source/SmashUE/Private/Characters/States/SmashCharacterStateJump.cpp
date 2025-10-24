@@ -1,12 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Characters/States/SmashCharacterStateJump.h"
+
+#include "Characters/SmashCharacterStateID.h"
+#include "Characters/SmashCharacterStateMachine.h"
 
 #include "Characters/SmashCharacter.h"
 #include "Characters/SmashCharacterSettings.h"
-#include "Characters/SmashCharacterStateID.h"
-#include "Characters/SmashCharacterStateMachine.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -28,14 +28,14 @@ void USmashCharacterStateJump::StateEnter(ESmashCharacterStateID PreviousStateID
 		SavedMaxWalkSpeed = Move->MaxWalkSpeed;
 		SavedAirControl = Move->AirControl;
 
-		const float h = FMath::Max(0.f, JumpMaxHeight);
-		const float th = FMath::Max(KINDA_SMALL_NUMBER, JumpDuration);
+		const float DesiredTimeToApex = FMath::Max(KINDA_SMALL_NUMBER, JumpDuration);
+		const float DesiredApexHeight = FMath::Max(0.f, JumpMaxHeight);
 
-		const float RequiredGravityZ = -2.f * h / FMath::Square(th);
-		const float RequiredInitialVerticalVelocity = (2.f * h) / th;
+		const float RequiredGravityZ = -2.f * DesiredApexHeight / FMath::Square(DesiredTimeToApex);
+		const float RequiredInitialVerticalVelocity = 2.f * DesiredApexHeight / DesiredTimeToApex;
 
 		const float CurrentGravityZWithScale = Move->GetGravityZ();
-		const float WorldGravityZ = FMath::IsNearlyZero(SavedGravityScale) ? CurrentGravityZWithScale : CurrentGravityZWithScale / SavedGravityScale;
+		const float WorldGravityZ = FMath::IsNearlyZero(SavedGravityScale) ? CurrentGravityZWithScale : (CurrentGravityZWithScale / SavedGravityScale);
 
 		float NewGravityScale = SavedGravityScale;
 		if (!FMath::IsNearlyZero(WorldGravityZ))
@@ -54,19 +54,6 @@ void USmashCharacterStateJump::StateEnter(ESmashCharacterStateID PreviousStateID
 	if (JumpAnim)
 	{
 		Character->PlayAnimMontage(JumpAnim);
-	}
-}
-
-void USmashCharacterStateJump::StateExit(ESmashCharacterStateID NextStateID)
-{
-    Super::StateExit(NextStateID);
-
-	if (UCharacterMovementComponent* Move = Character->GetCharacterMovement())
-	{
-		Move->GravityScale = SavedGravityScale;
-		Move->JumpZVelocity = SavedJumpZVelocity;
-		Move->MaxWalkSpeed = SavedMaxWalkSpeed;
-		Move->AirControl = SavedAirControl;
 	}
 }
 
@@ -90,3 +77,15 @@ void USmashCharacterStateJump::StateTick(float DeltaTime)
     }
 }
 
+void USmashCharacterStateJump::StateExit(ESmashCharacterStateID NextStateID)
+{
+	Super::StateExit(NextStateID);
+
+	if (UCharacterMovementComponent* Move = Character->GetCharacterMovement())
+	{
+		Move->GravityScale = SavedGravityScale;
+		Move->JumpZVelocity = SavedJumpZVelocity;
+		Move->MaxWalkSpeed = SavedMaxWalkSpeed;
+		Move->AirControl = SavedAirControl;
+	}
+}

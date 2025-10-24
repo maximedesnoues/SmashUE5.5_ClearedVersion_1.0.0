@@ -1,19 +1,16 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Match/MatchGameMode.h"
 
 #include "Arena/ArenaPlayerStart.h"
 #include "Arena/ArenaSettings.h"
-#include "Characters/SmashCharacter.h"
-#include "Characters/SmashCharacterInputData.h"
-#include "Characters/SmashCharacterSettings.h"
 
-#include "LocalMultiplayerSettings.h"
+#include "Characters/SmashCharacter.h"
+#include "Characters/SmashCharacterSettings.h"
+#include "Characters/SmashCharacterInputData.h"
+
 #include "LocalMultiplayerSubsystem.h"
 
-#include "Engine/GameInstance.h"
-#include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 
 void AMatchGameMode::BeginPlay()
@@ -27,43 +24,15 @@ void AMatchGameMode::BeginPlay()
     SpawnCharacters(PlayerStartsPoints);
 }
 
-USmashCharacterInputData* AMatchGameMode::LoadInputDataFromConfig() const
-{
-    const USmashCharacterSettings* CharacterSettings = GetDefault<USmashCharacterSettings>();
-    if (!CharacterSettings)
-    {
-        return nullptr;
-    }
-    
-    return CharacterSettings->InputData.LoadSynchronous();
-}
-
-UInputMappingContext* AMatchGameMode::LoadInputMappingContextFromConfig() const
-{
-    const USmashCharacterSettings* CharacterSettings = GetDefault<USmashCharacterSettings>();
-    if (!CharacterSettings)
-    {
-        return nullptr;
-    }
-    
-    return CharacterSettings->InputMappingContext.LoadSynchronous();
-}
-
 void AMatchGameMode::CreateAndInitPlayers() const
 {
-    UGameInstance* GameInstance = GetGameInstance();
-    if (!GameInstance)
+    if (UGameInstance* GameInstance = GetGameInstance())
     {
-        return;
+        if (ULocalMultiplayerSubsystem* LocalMultiplayerSubsystem = GameInstance->GetSubsystem<ULocalMultiplayerSubsystem>())
+        {
+            LocalMultiplayerSubsystem->CreateAndInitPlayers(ELocalMultiplayerInputMappingType::InGame);
+        }
     }
-
-    ULocalMultiplayerSubsystem* LocalMultiplayerSubsystem = GameInstance->GetSubsystem<ULocalMultiplayerSubsystem>();
-    if (!LocalMultiplayerSubsystem)
-    {
-        return;
-    }
-
-    LocalMultiplayerSubsystem->CreateAndInitPlayers(ELocalMultiplayerInputMappingType::InGame);
 }
 
 void AMatchGameMode::FindPlayerStartActorsInArena(TArray<AArenaPlayerStart*>& ResultsActors) const
@@ -113,6 +82,18 @@ void AMatchGameMode::SpawnCharacters(const TArray<AArenaPlayerStart*>& SpawnPoin
     }
 }
 
+USmashCharacterInputData* AMatchGameMode::LoadInputDataFromConfig() const
+{
+    const USmashCharacterSettings* CharacterSettings = GetDefault<USmashCharacterSettings>();
+    return CharacterSettings ? CharacterSettings->InputData.LoadSynchronous() : nullptr;
+}
+
+UInputMappingContext* AMatchGameMode::LoadInputMappingContextFromConfig() const
+{
+    const USmashCharacterSettings* CharacterSettings = GetDefault<USmashCharacterSettings>();
+    return CharacterSettings ? CharacterSettings->InputMappingContext.LoadSynchronous() : nullptr;
+}
+
 TSubclassOf<ASmashCharacter> AMatchGameMode::GetSmashCharacterClassFromInputType(EAutoReceiveInput::Type InputType) const
 {
     const UArenaSettings* ArenaSettings = GetDefault<UArenaSettings>();
@@ -135,4 +116,3 @@ TSubclassOf<ASmashCharacter> AMatchGameMode::GetSmashCharacterClassFromInputType
         return nullptr;
     }
 }
-

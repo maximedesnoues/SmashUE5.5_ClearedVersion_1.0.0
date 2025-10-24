@@ -1,12 +1,12 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Characters/States/SmashCharacterStateWalk.h"
+
+#include "Characters/SmashCharacterStateID.h"
+#include "Characters/SmashCharacterStateMachine.h"
 
 #include "Characters/SmashCharacter.h"
 #include "Characters/SmashCharacterSettings.h"
-#include "Characters/SmashCharacterStateID.h"
-#include "Characters/SmashCharacterStateMachine.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -21,30 +21,17 @@ void USmashCharacterStateWalk::StateEnter(ESmashCharacterStateID PreviousStateID
 
 	CharacterSettings = GetDefault<USmashCharacterSettings>();
 
-	Character->InputMoveXFastEvent.AddDynamic(this, &USmashCharacterStateWalk::OnInputMoveXFast);
-	Character->InputJumpEvent.AddDynamic(this, &USmashCharacterStateWalk::OnInputJump);
-
 	if (UCharacterMovementComponent* Move = Character->GetCharacterMovement())
 	{
 		Move->MaxWalkSpeed = MoveSpeedMax;
 	}
 
+	Character->InputMoveXFastEvent.AddDynamic(this, &USmashCharacterStateWalk::OnInputMoveXFast);
+	Character->InputJumpEvent.AddDynamic(this, &USmashCharacterStateWalk::OnInputJump);
+
 	if (WalkAnim)
 	{
 		Character->PlayAnimMontage(WalkAnim);
-	}
-}
-
-void USmashCharacterStateWalk::StateExit(ESmashCharacterStateID NextStateID)
-{
-	Super::StateExit(NextStateID);
-
-	Character->InputMoveXFastEvent.RemoveDynamic(this, &USmashCharacterStateWalk::OnInputMoveXFast);
-	Character->InputJumpEvent.RemoveDynamic(this, &USmashCharacterStateWalk::OnInputJump);
-
-	if (UCharacterMovementComponent* Move = Character->GetCharacterMovement())
-	{
-		Move->StopMovementImmediately();
 	}
 }
 
@@ -73,18 +60,30 @@ void USmashCharacterStateWalk::StateTick(float DeltaTime)
 	}
 }
 
+void USmashCharacterStateWalk::StateExit(ESmashCharacterStateID NextStateID)
+{
+	Super::StateExit(NextStateID);
+
+	Character->InputMoveXFastEvent.RemoveDynamic(this, &USmashCharacterStateWalk::OnInputMoveXFast);
+	Character->InputJumpEvent.RemoveDynamic(this, &USmashCharacterStateWalk::OnInputJump);
+
+	if (UCharacterMovementComponent* Move = Character->GetCharacterMovement())
+	{
+		Move->StopMovementImmediately();
+	}
+}
+
 void USmashCharacterStateWalk::OnInputMoveXFast(float InputMoveXFast)
 {
 	StateMachine->ChangeState(ESmashCharacterStateID::Run);
+	return;
 }
 
 void USmashCharacterStateWalk::OnInputJump()
 {
-	if (!Character->CanJump())
+	if (Character->CanJump())
 	{
+		StateMachine->ChangeState(ESmashCharacterStateID::Jump);
 		return;
 	}
-
-	StateMachine->ChangeState(ESmashCharacterStateID::Jump);
 }
-

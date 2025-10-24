@@ -8,11 +8,6 @@
 
 class USmashCharacterSettings;
 
-class UAnimMontage;
-
-/**
- *
- */
 UCLASS(ClassGroup=(SmashCharacterState), meta=(BlueprintSpawnableComponent))
 class SMASHUE_API USmashCharacterStateJump : public USmashCharacterState
 {
@@ -20,16 +15,17 @@ class SMASHUE_API USmashCharacterStateJump : public USmashCharacterState
 
 public:
 	virtual ESmashCharacterStateID GetStateID() const override;
-	virtual void StateEnter(ESmashCharacterStateID PreviousStateID) override;
-	virtual void StateExit(ESmashCharacterStateID NextStateID) override;
+	
+    virtual void StateEnter(ESmashCharacterStateID PreviousStateID) override;
 	virtual void StateTick(float DeltaTime) override;
+    virtual void StateExit(ESmashCharacterStateID NextStateID) override;
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jump")
-    float JumpMaxHeight = 280.f;
+    float JumpDuration = 1.f;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jump")
-    float JumpDuration = 1.f;
+    float JumpMaxHeight = 280.f;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jump")
     float JumpWalkSpeed = 400.f;

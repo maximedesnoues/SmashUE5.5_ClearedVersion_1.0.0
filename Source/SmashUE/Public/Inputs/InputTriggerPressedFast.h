@@ -6,9 +6,6 @@
 #include "InputTriggers.h"
 #include "InputTriggerPressedFast.generated.h"
 
-/**
- * 
- */
 UCLASS(NotBlueprintable, meta=(DisplayName="Pressed Fast", NotInputConfigurable="true"))
 class SMASHUE_API UInputTriggerPressedFast : public UInputTrigger
 {
@@ -17,7 +14,7 @@ class SMASHUE_API UInputTriggerPressedFast : public UInputTrigger
 public:
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category="Trigger Settings", meta=(DisplayThumbnail="false"))
 	float PressedFastThreshold = 0.8f;
-	
+
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category="Trigger Settings", meta=(DisplayThumbnail="false"))
 	float Delay = 0.5f;
 
@@ -26,6 +23,5 @@ protected:
 
 private:
 	float Timer = 0.f;
-
 	bool bAlreadyTriggered = false;
 };

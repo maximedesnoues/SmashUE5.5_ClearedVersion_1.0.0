@@ -1,12 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Characters/States/SmashCharacterStateFall.h"
+
+#include "Characters/SmashCharacterStateID.h"
+#include "Characters/SmashCharacterStateMachine.h"
 
 #include "Characters/SmashCharacter.h"
 #include "Characters/SmashCharacterSettings.h"
-#include "Characters/SmashCharacterStateID.h"
-#include "Characters/SmashCharacterStateMachine.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -21,8 +21,6 @@ void USmashCharacterStateFall::StateEnter(ESmashCharacterStateID PreviousStateID
 
     CharacterSettings = GetDefault<USmashCharacterSettings>();
 
-    Character->InputFallFastEvent.AddDynamic(this, &USmashCharacterStateFall::OnInputFallFast);
-
     if (UCharacterMovementComponent* Move = Character->GetCharacterMovement())
     {
         Move->GravityScale = FallGravityScale;
@@ -30,21 +28,11 @@ void USmashCharacterStateFall::StateEnter(ESmashCharacterStateID PreviousStateID
         Move->AirControl = FallAirControl;
     }
 
+    Character->InputFallFastEvent.AddDynamic(this, &USmashCharacterStateFall::OnInputFallFast);
+
     if (FallAnim)
     {
         Character->PlayAnimMontage(FallAnim);
-    }
-}
-
-void USmashCharacterStateFall::StateExit(ESmashCharacterStateID NextStateID)
-{
-    Super::StateExit(NextStateID);
-
-    Character->InputFallFastEvent.RemoveDynamic(this, &USmashCharacterStateFall::OnInputFallFast);
-
-    if (UCharacterMovementComponent* Move = Character->GetCharacterMovement())
-    {
-        Move->GravityScale = 1.f;
     }
 }
 
@@ -68,6 +56,18 @@ void USmashCharacterStateFall::StateTick(float DeltaTime)
     }
 }
 
+void USmashCharacterStateFall::StateExit(ESmashCharacterStateID NextStateID)
+{
+    Super::StateExit(NextStateID);
+
+    Character->InputFallFastEvent.RemoveDynamic(this, &USmashCharacterStateFall::OnInputFallFast);
+
+    if (UCharacterMovementComponent* Move = Character->GetCharacterMovement())
+    {
+        Move->GravityScale = 1.f;
+    }
+}
+
 void USmashCharacterStateFall::OnInputFallFast(float InputFallFast)
 {
     if (UCharacterMovementComponent* Move = Character->GetCharacterMovement())
@@ -78,4 +78,3 @@ void USmashCharacterStateFall::OnInputFallFast(float InputFallFast)
         }
     }
 }
-

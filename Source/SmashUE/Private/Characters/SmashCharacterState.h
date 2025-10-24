@@ -6,10 +6,10 @@
 #include "Components/ActorComponent.h"
 #include "SmashCharacterState.generated.h"
 
-class ASmashCharacter;
-class USmashCharacterStateMachine;
-
 enum class ESmashCharacterStateID : uint8;
+
+class USmashCharacterStateMachine;
+class ASmashCharacter;
 
 UCLASS(Abstract)
 class SMASHUE_API USmashCharacterState : public UActorComponent
@@ -21,10 +21,11 @@ public:
 	USmashCharacterState();
 
 	virtual ESmashCharacterStateID GetStateID() const;
+	
 	virtual void StateInit(USmashCharacterStateMachine* InStateMachine);
 	virtual void StateEnter(ESmashCharacterStateID PreviousStateID);
-	virtual void StateExit(ESmashCharacterStateID NextStateID);
 	virtual void StateTick(float DeltaTime);
+	virtual void StateExit(ESmashCharacterStateID NextStateID);
 
 protected:
 	UPROPERTY()
