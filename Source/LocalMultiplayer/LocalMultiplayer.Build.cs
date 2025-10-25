@@ -2,15 +2,15 @@
 
 using UnrealBuildTool;
 
-public class SmashUE : ModuleRules
+public class LocalMultiplayer : ModuleRules
 {
-	public SmashUE(ReadOnlyTargetRules Target) : base(Target)
+	public LocalMultiplayer(ReadOnlyTargetRules Target) : base(Target)
 	{
-		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+	    PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "DeveloperSettings" });
 
-		PrivateDependencyModuleNames.AddRange(new string[] { "LocalMultiplayer" });
+        PrivateDependencyModuleNames.AddRange(new string[] {  });
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

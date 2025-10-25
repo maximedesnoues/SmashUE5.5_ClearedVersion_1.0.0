@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class SmashUEEditorTarget : TargetRules
 {
-	public SmashUEEditorTarget( TargetInfo Target) : base(Target)
+	public SmashUEEditorTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V4;

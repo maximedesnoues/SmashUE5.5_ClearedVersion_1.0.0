@@ -4,19 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
-#include "LocalMultiplayerSettings.h"
 #include "LocalMultiplayerSubsystem.generated.h"
 
-/**
- * 
- */
+enum class ELocalMultiplayerInputMappingType;
+
 UCLASS()
 class LOCALMULTIPLAYER_API ULocalMultiplayerSubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
-
+	
 public:
-	UFUNCTION(BlueprintCallable, Category="Local Multiplayer")
+	UFUNCTION(BlueprintCallable)
 	void CreateAndInitPlayers(ELocalMultiplayerInputMappingType MappingType);
 
 	int GetAssignedPlayerIndexFromKeyboardProfileIndex(int KeyboardProfileIndex) const;

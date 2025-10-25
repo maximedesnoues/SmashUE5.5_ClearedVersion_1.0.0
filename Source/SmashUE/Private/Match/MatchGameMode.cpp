@@ -9,6 +9,7 @@
 #include "Characters/SmashCharacterSettings.h"
 #include "Characters/SmashCharacterInputData.h"
 
+#include "LocalMultiplayerSettings.h"
 #include "LocalMultiplayerSubsystem.h"
 
 #include "Kismet/GameplayStatics.h"

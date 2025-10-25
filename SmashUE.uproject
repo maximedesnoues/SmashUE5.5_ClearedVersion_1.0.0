@@ -7,17 +7,16 @@
 		{
 			"Name": "SmashUE",
 			"Type": "Runtime",
-			"LoadingPhase": "Default",
-			"AdditionalDependencies": [
-				"Engine",
-				"DeveloperSettings"
-			]
-		}
-	],
-	"Plugins": [
+			"LoadingPhase": "Default"
+		},
 		{
 			"Name": "LocalMultiplayer",
-			"Enabled": true
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"DeveloperSettings",
+				"Engine"
+			]
 		}
 	]
 }

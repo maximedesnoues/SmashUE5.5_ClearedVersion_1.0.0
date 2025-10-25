@@ -1,10 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "LocalMultiplayerSettings.h"
 
-#include "EnhancedActionKeyMapping.h"
-#include "InputCoreTypes.h"
 #include "InputMappingContext.h"
 
 UInputMappingContext* FLocalMultiplayerProfileData::GetIMCFromType(ELocalMultiplayerInputMappingType MappingType) const
@@ -36,7 +33,7 @@ bool FLocalMultiplayerProfileData::ContainsKey(const FKey& Key, ELocalMultiplaye
 			return true;
 		}
 	}
-	
+
 	return false;
 }
 
@@ -54,7 +51,6 @@ int ULocalMultiplayerSettings::FindKeyboardProfileIndexFromKey(const FKey& Key, 
 			return KeyboardProfileIndex;
 		}
 	}
-	
+
 	return -1;
 }
-

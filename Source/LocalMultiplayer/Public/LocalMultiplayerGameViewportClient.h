@@ -6,15 +6,6 @@
 #include "Engine/GameViewportClient.h"
 #include "LocalMultiplayerGameViewportClient.generated.h"
 
-class FViewport;
-
-struct FInputDeviceId;
-struct FInputKeyEventArgs;
-struct FKey;
-
-/**
- *
- */
 UCLASS()
 class LOCALMULTIPLAYER_API ULocalMultiplayerGameViewportClient : public UGameViewportClient
 {
