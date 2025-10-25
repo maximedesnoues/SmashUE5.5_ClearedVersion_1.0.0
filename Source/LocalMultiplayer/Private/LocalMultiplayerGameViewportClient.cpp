@@ -65,8 +65,7 @@ bool ULocalMultiplayerGameViewportClient::InputKey(const FInputKeyEventArgs& Eve
 
         if (APlayerController* PC = UGameplayStatics::GetPlayerController(WorldPtr, PlayerIndex))
         {
-            const double InDelta = (EventArgs.Event == IE_Released) ? 0.0 : 1.0;
-            return PC->InputKey(FInputKeyParams(EventArgs.Key, EventArgs.Event, InDelta, false, EventArgs.InputDevice));
+            return PC->InputKey(FInputKeyParams(EventArgs.Key, EventArgs.Event, static_cast<double>(EventArgs.AmountDepressed), false, EventArgs.InputDevice));
         }
 
         return Super::InputKey(EventArgs);
@@ -84,8 +83,7 @@ bool ULocalMultiplayerGameViewportClient::InputKey(const FInputKeyEventArgs& Eve
 
         if (APlayerController* PC = UGameplayStatics::GetPlayerController(WorldPtr, PlayerIndex))
         {
-            const double InDelta = (EventArgs.Event == IE_Released) ? 0.0 : 1.0;
-            return PC->InputKey(FInputKeyParams(EventArgs.Key, EventArgs.Event, InDelta, true, EventArgs.InputDevice));
+            return PC->InputKey(FInputKeyParams(EventArgs.Key, EventArgs.Event, static_cast<double>(EventArgs.AmountDepressed), true, EventArgs.InputDevice));
         }
 
         return Super::InputKey(EventArgs);
@@ -137,8 +135,7 @@ bool ULocalMultiplayerGameViewportClient::InputAxis(FViewport* InViewport, FInpu
 
         if (APlayerController* PC = UGameplayStatics::GetPlayerController(WorldPtr, PlayerIndex))
         {
-            const FVector InDelta(Delta, 0.0, 0.0);
-            return PC->InputKey(FInputKeyParams(Key, InDelta, DeltaTime, NumSamples, false, InputDevice));
+            return PC->InputKey(FInputKeyParams(Key, static_cast<double>(Delta), DeltaTime, NumSamples, bGamepad, InputDevice));
         }
 
         return Super::InputAxis(InViewport, InputDevice, Key, Delta, DeltaTime, NumSamples, bGamepad);
@@ -156,8 +153,7 @@ bool ULocalMultiplayerGameViewportClient::InputAxis(FViewport* InViewport, FInpu
 
         if (APlayerController* PC = UGameplayStatics::GetPlayerController(WorldPtr, PlayerIndex))
         {
-            const FVector InDelta(Delta, 0.0, 0.0);
-            return PC->InputKey(FInputKeyParams(Key, InDelta, DeltaTime, NumSamples, true, InputDevice));
+            return PC->InputKey(FInputKeyParams(Key, static_cast<double>(Delta), DeltaTime, NumSamples, bGamepad, InputDevice));
         }
 
         return Super::InputAxis(InViewport, InputDevice, Key, Delta, DeltaTime, NumSamples, bGamepad);

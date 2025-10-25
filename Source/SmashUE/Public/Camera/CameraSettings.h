@@ -6,9 +6,6 @@
 #include "Engine/DeveloperSettings.h"
 #include "CameraSettings.generated.h"
 
-/**
- * 
- */
 UCLASS(Config=Game, DefaultConfig, meta=(DisplayName="Camera Settings"))
 class SMASHUE_API UCameraSettings : public UDeveloperSettings
 {

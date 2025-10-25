@@ -12,9 +12,6 @@ class SMASHUE_API UCameraFollowTarget : public UInterface
 	GENERATED_BODY()
 };
 
-/**
- *
- */
 class SMASHUE_API ICameraFollowTarget
 {
 	GENERATED_BODY()
