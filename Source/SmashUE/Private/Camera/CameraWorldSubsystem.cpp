@@ -1,17 +1,15 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Camera/CameraWorldSubsystem.h"
 
 #include "Camera/CameraFollowTarget.h"
 #include "Camera/CameraSettings.h"
 
 #include "Camera/CameraComponent.h"
-#include "Components/ActorComponent.h"
-#include "EngineUtils.h"
-#include "Engine/World.h"
-#include "GameFramework/Actor.h"
+
 #include "Kismet/GameplayStatics.h"
+
+#include "EngineUtils.h"
 
 void UCameraWorldSubsystem::PostInitialize()
 {
@@ -378,7 +376,7 @@ FVector UCameraWorldSubsystem::CalculateWorldPositionFromViewportPosition(const 
 	return WorldPosition;
 }
 
-void UCameraWorldSubsystem::ClampPositionIntoCameraBounds(FVector& Position)
+void UCameraWorldSubsystem::ClampPositionIntoCameraBounds(FVector& Position) const
 {
 	FVector2D ViewportBoundsMin, ViewportBoundsMax;
 	GetViewportBounds(ViewportBoundsMin, ViewportBoundsMax);
@@ -407,22 +405,6 @@ void UCameraWorldSubsystem::ClampPositionIntoCameraBounds(FVector& Position)
 	{
 		Position.X = FMath::Clamp(Position.X, AllowedCameraMinX, AllowedCameraMaxX);
 		Position.Z = FMath::Clamp(Position.Z, AllowedCameraMinZ, AllowedCameraMaxZ);
-	}
-}
-
-void UCameraWorldSubsystem::InitCameraZoomParameters()
-{
-	AActor* CameraDistanceMinActor = FindCameraDistanceMinActor();
-	AActor* CameraDistanceMaxActor = FindCameraDistanceMaxActor();
-
-	if (CameraDistanceMinActor)
-	{
-		CameraZoomYMin = CameraDistanceMinActor->GetActorLocation().Y;
-	}
-
-	if (CameraDistanceMaxActor)
-	{
-		CameraZoomYMax = CameraDistanceMaxActor->GetActorLocation().Y;
 	}
 }
 
@@ -492,3 +474,18 @@ AActor* UCameraWorldSubsystem::FindCameraDistanceMaxActor() const
 	return nullptr;
 }
 
+void UCameraWorldSubsystem::InitCameraZoomParameters()
+{
+	AActor* CameraDistanceMinActor = FindCameraDistanceMinActor();
+	AActor* CameraDistanceMaxActor = FindCameraDistanceMaxActor();
+
+	if (CameraDistanceMinActor)
+	{
+		CameraZoomYMin = CameraDistanceMinActor->GetActorLocation().Y;
+	}
+
+	if (CameraDistanceMaxActor)
+	{
+		CameraZoomYMax = CameraDistanceMaxActor->GetActorLocation().Y;
+	}
+}

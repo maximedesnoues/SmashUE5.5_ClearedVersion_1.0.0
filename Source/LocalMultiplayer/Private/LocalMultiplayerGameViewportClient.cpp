@@ -21,15 +21,15 @@ bool ULocalMultiplayerGameViewportClient::InputKey(const FInputKeyEventArgs& Eve
     {
         return Super::InputKey(EventArgs);
     }
-
-    UWorld* WorldPtr = GetWorld();
-    if (!WorldPtr)
-    {
-        return Super::InputKey(EventArgs);
-    }
     
     UGameInstance* GI = GetGameInstance();
     if (!GI)
+    {
+        return Super::InputKey(EventArgs);
+    }
+
+    UWorld* WorldPtr = GetWorld();
+    if (!WorldPtr)
     {
         return Super::InputKey(EventArgs);
     }
@@ -65,7 +65,7 @@ bool ULocalMultiplayerGameViewportClient::InputKey(const FInputKeyEventArgs& Eve
 
         if (APlayerController* PC = UGameplayStatics::GetPlayerController(WorldPtr, PlayerIndex))
         {
-            return PC->InputKey(FInputKeyParams(EventArgs.Key, EventArgs.Event, static_cast<double>(EventArgs.AmountDepressed), false, EventArgs.InputDevice));
+            return PC->InputKey(FInputKeyParams(EventArgs.Key, EventArgs.Event, EventArgs.AmountDepressed, false, EventArgs.InputDevice));
         }
 
         return Super::InputKey(EventArgs);
@@ -83,7 +83,7 @@ bool ULocalMultiplayerGameViewportClient::InputKey(const FInputKeyEventArgs& Eve
 
         if (APlayerController* PC = UGameplayStatics::GetPlayerController(WorldPtr, PlayerIndex))
         {
-            return PC->InputKey(FInputKeyParams(EventArgs.Key, EventArgs.Event, static_cast<double>(EventArgs.AmountDepressed), true, EventArgs.InputDevice));
+            return PC->InputKey(FInputKeyParams(EventArgs.Key, EventArgs.Event, EventArgs.AmountDepressed, true, EventArgs.InputDevice));
         }
 
         return Super::InputKey(EventArgs);
@@ -92,14 +92,14 @@ bool ULocalMultiplayerGameViewportClient::InputKey(const FInputKeyEventArgs& Eve
 
 bool ULocalMultiplayerGameViewportClient::InputAxis(FViewport* InViewport, FInputDeviceId InputDevice, FKey Key, float Delta, float DeltaTime, int32 NumSamples, bool bGamepad)
 {
-    UWorld* WorldPtr = GetWorld();
-    if (!WorldPtr)
+    UGameInstance* GI = GetGameInstance();
+    if (!GI)
     {
         return Super::InputAxis(InViewport, InputDevice, Key, Delta, DeltaTime, NumSamples, bGamepad);
     }
 
-    UGameInstance* GI = GetGameInstance();
-    if (!GI)
+    UWorld* WorldPtr = GetWorld();
+    if (!WorldPtr)
     {
         return Super::InputAxis(InViewport, InputDevice, Key, Delta, DeltaTime, NumSamples, bGamepad);
     }
@@ -135,7 +135,7 @@ bool ULocalMultiplayerGameViewportClient::InputAxis(FViewport* InViewport, FInpu
 
         if (APlayerController* PC = UGameplayStatics::GetPlayerController(WorldPtr, PlayerIndex))
         {
-            return PC->InputKey(FInputKeyParams(Key, static_cast<double>(Delta), DeltaTime, NumSamples, bGamepad, InputDevice));
+            return PC->InputKey(FInputKeyParams(Key, Delta, DeltaTime, NumSamples, bGamepad, InputDevice));
         }
 
         return Super::InputAxis(InViewport, InputDevice, Key, Delta, DeltaTime, NumSamples, bGamepad);
@@ -153,7 +153,7 @@ bool ULocalMultiplayerGameViewportClient::InputAxis(FViewport* InViewport, FInpu
 
         if (APlayerController* PC = UGameplayStatics::GetPlayerController(WorldPtr, PlayerIndex))
         {
-            return PC->InputKey(FInputKeyParams(Key, static_cast<double>(Delta), DeltaTime, NumSamples, bGamepad, InputDevice));
+            return PC->InputKey(FInputKeyParams(Key, Delta, DeltaTime, NumSamples, bGamepad, InputDevice));
         }
 
         return Super::InputAxis(InViewport, InputDevice, Key, Delta, DeltaTime, NumSamples, bGamepad);

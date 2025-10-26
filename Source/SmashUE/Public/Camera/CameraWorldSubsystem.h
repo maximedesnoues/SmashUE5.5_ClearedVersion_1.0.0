@@ -8,9 +8,6 @@
 
 class UCameraComponent;
 
-/**
- * 
- */
 UCLASS()
 class SMASHUE_API UCameraWorldSubsystem : public UTickableWorldSubsystem
 {
@@ -34,7 +31,7 @@ protected:
 	TObjectPtr<UCameraComponent> CameraMain = nullptr;
 
 	UCameraComponent* FindCameraByTag(const FName& Tag) const;
-
+	
 	void TickUpdateCameraPosition(float DeltaTime);
 	void TickUpdateCameraZoom(float DeltaTime);
 
@@ -72,8 +69,7 @@ protected:
 
 	void GetViewportBounds(FVector2D& OutViewportBoundsMin, FVector2D& OutViewportBoundsMax) const;
 	FVector CalculateWorldPositionFromViewportPosition(const FVector2D& ViewportPosition) const;
-
-	void ClampPositionIntoCameraBounds(FVector& Position);
+	void ClampPositionIntoCameraBounds(FVector& Position) const;
 
 #pragma endregion
 
@@ -86,11 +82,11 @@ protected:
 	UPROPERTY()
 	float CameraZoomYMax = 0.f;
 
-	UFUNCTION()
-	void InitCameraZoomParameters();
-
 	AActor* FindCameraDistanceMinActor() const;
 	AActor* FindCameraDistanceMaxActor() const;
+
+	UFUNCTION()
+	void InitCameraZoomParameters();
 
 #pragma endregion
 };

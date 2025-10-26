@@ -16,6 +16,12 @@ void ULocalMultiplayerSubsystem::CreateAndInitPlayers(ELocalMultiplayerInputMapp
 		return;
 	}
 
+    UGameInstance* GI = GetGameInstance();
+    if (!GI)
+    {
+        return;
+    }
+
     UWorld* World = GetWorld();
     if (!World)
     {
@@ -24,7 +30,7 @@ void ULocalMultiplayerSubsystem::CreateAndInitPlayers(ELocalMultiplayerInputMapp
 
     const int NbKeyboardProfiles = LocalMultiplayerSettings->GetNbKeyboardProfiles();
     const int NbMaxGamepads = LocalMultiplayerSettings->NbMaxGamepads;
-    const int ExistingPlayers = GetGameInstance()->GetLocalPlayers().Num();
+    const int ExistingPlayers = GI->GetLocalPlayers().Num();
 
     for (int i = 0; i < NbKeyboardProfiles; ++i)
     {
