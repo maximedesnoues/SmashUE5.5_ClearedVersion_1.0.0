@@ -82,9 +82,6 @@ protected:
 	UPROPERTY()
 	float CameraZoomYMax = 0.f;
 
-	AActor* FindCameraDistanceMinActor() const;
-	AActor* FindCameraDistanceMaxActor() const;
-
 	UFUNCTION()
 	void InitCameraZoomParameters();
 
